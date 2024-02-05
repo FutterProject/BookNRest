@@ -2,7 +2,7 @@
 
 Book&Rest is an application for booking hotels. It is a platform that connects travelers and hotel owners. Users can choose the rooms they want to stay in, and hotel owners can list their hotels on the platform. developed by Flutter
 
-![userinterfaceImage](https://imgur.com/a/dj3Asqg.png)
+![User_Interface](https://imgur.com/zhsAP4x.png)
 
 ## Features
 
