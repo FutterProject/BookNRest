@@ -54,3 +54,4 @@ As a hotel owner, you can:
 ## License
 
 Book&Rest is licensed under the MIT License. See the LICENSE file for more details.
+"# BookNRest"
