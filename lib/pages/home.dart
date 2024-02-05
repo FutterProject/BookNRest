@@ -1,6 +1,7 @@
 import 'package:book_and_rest/pages/database.dart';
 import 'package:book_and_rest/pages/destination.dart';
 import 'package:book_and_rest/pages/model.dart';
+import 'package:book_and_rest/pages/searchHotel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:custom_calender_picker2/custom_calender_picker2.dart';
@@ -151,9 +152,13 @@ class _Home extends State<Home> {
                             _selectedProvince != null) {
                           submit = !submit;
                           setState(() {
-                            db.showAllRoom();
                             print("=========Click on Search=========");
+                            // db.showAllRoom();
                           });
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SearchHotel()));
                         }
                       },
                       style: ElevatedButton.styleFrom(

@@ -10,6 +10,8 @@ class SearchHotel extends StatefulWidget {
 class _SearchHotel extends State<SearchHotel> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(title: Text("Search Hotels")),
+    );
   }
 }

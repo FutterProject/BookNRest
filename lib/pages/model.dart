@@ -1,7 +1,3 @@
-// class SearchModel {
-//   final String destination;
-//   final String
-// }
 class HotelModel {
   final int? id;
   final String name;

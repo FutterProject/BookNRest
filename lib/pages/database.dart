@@ -12,7 +12,7 @@ class appDatabase {
 
   Future<Database> createdb() async {
     final path = await getDatabasesPath();
-    var database = await openDatabase(join(path, 'hotelDB.db'), version: 2,
+    var database = await openDatabase(join(path, 'hotelDB.db'), version: 1,
         onCreate: ((db, version) async {
       await db.execute('''
     CREATE TABLE Hotels (
@@ -80,9 +80,6 @@ class appDatabase {
            (1002, 'Alice', 'alice@example.com')
   ''');
     }));
-    // final tables =
-    //     await database.rawQuery('SELECT * FROM sqlite_master ORDER BY name;');
-    // print(tables);
     return database;
   }
 
