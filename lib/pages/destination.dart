@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class destination extends StatefulWidget {
   const destination({super.key});
@@ -102,12 +103,14 @@ class _destination extends State<destination> {
   void initState() {
     _filterProvince = thaiProvinces;
     super.initState();
+    _runFilter('');
   }
 
   void _runFilter(String enteredKeyword) {
     List<String> result = [];
     if (enteredKeyword.isEmpty) {
-      result = thaiProvinces;
+      // result = thaiProvinces;
+      result = ['Near my location'];
     } else {
       result = thaiProvinces
           .where((searchProvince) => searchProvince
@@ -143,8 +146,12 @@ class _destination extends State<destination> {
                   itemCount: _filterProvince.length,
                   itemBuilder: (context, index) {
                     final province = _filterProvince[index];
+                    print('****** : $province');
                     return ListTile(
                       title: Text(province),
+                      leading: province != 'Near my location'
+                          ? Icon(Icons.location_city)
+                          : Icon(Symbols.gps_fixed),
                       onTap: () {
                         //เลือกจังหวัดที่ต้องการส่งค่ากลับไป
                         Navigator.pop(context, province);
@@ -161,23 +168,3 @@ class _destination extends State<destination> {
     );
   }
 }
-// Navigator.push(
-//             context,
-//             MaterialPageRoute(builder: (context) => addBookForm()),
-//           ).then((_) {
-//             setState(() {
-//               db.getAllData();
-//             });
-//           });
-                  // itemBuilder: (context, index) => Card(
-                  //   key: ValueKey(thaiProvinces[index]),
-                  //   color: Colors.blue,
-                  //   elevation: 2,
-                  //   margin: EdgeInsets.symmetric(vertical: 10),
-                  //   child: ListTile(
-                  //     subtitle: Text(
-                  //       '${_filterProvince.toString()}',
-                  //       style: TextStyle(color: Colors.white),
-                  //     ),
-                  //   ),
-                  // ),

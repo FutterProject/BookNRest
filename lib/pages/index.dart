@@ -1,5 +1,6 @@
 import 'package:book_and_rest/pages/home.dart';
 import 'package:book_and_rest/pages/myBooking.dart';
+import 'package:book_and_rest/pages/myMap.dart';
 import 'package:book_and_rest/pages/myfavorite.dart';
 import 'package:book_and_rest/pages/myprofile.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,8 @@ class IndexState extends StatefulWidget {
 
 class _IndexState extends State<IndexState> {
   int screenIndex = 0;
-  final menuScreen = [Home(), MyBooking(), MyFavorite(), MyProfile()];
+  // final menuScreen = [Home(), MyBooking(), MyFavorite(), MyProfile()];
+  final menuScreen = [Home(), ShowMap(), MyFavorite(), MyProfile()];
 
   void onTabTapped(int index) {
     setState(() {

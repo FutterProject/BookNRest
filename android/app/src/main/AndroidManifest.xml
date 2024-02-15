@@ -3,6 +3,8 @@
         android:label="book_and_rest"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
+    <meta-data android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyAY6Gne2AKEU3NDPDL1u1bgzrUwCHS7dfw"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -29,5 +31,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+            <!-- Add your Google Maps API Key here -->
+        
+
     </application>
 </manifest>

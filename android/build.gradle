@@ -1,5 +1,6 @@
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    // ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = '1.9.10'
     repositories {
         google()
         mavenCentral()
@@ -7,6 +8,8 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.android.tools.build:gradle:3.3.0"
+        classpath "com.google.gms:google-services:4.2.0"
     }
 }
 
@@ -14,6 +17,9 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+    tasks.withType(JavaCompile){
+        options.compilerArgs <<"-Xlint:deprecation"
     }
 }
 
