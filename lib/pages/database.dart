@@ -24,7 +24,9 @@ class appDatabase {
       img TEXT,
       lat TEXT,
       long TEXT,
-      displacement REAL
+      displacement REAL,
+      lowest INTEGER NULL,
+      hotel_description TEXT
     )
   ''');
       await db.execute('''
@@ -34,6 +36,10 @@ class appDatabase {
       type TEXT,
       price REAL,
       hotel_id INTEGER,
+      room_img TEXT,
+      adult INTEGER,
+      child INTEGER,
+      room_description TEXT,
       FOREIGN KEY (hotel_id) REFERENCES Hotels(hotel_id)
     )
   ''');
@@ -51,6 +57,10 @@ class appDatabase {
       user_id INTEGER,
       checkin_date DATE,
       checkout_date DATE,
+      first_name TEXT, 
+      last_name TEXT,
+      email TEXT, 
+      phone_number TEXT,
       FOREIGN KEY (room_id) REFERENCES Rooms(room_id),
       FOREIGN KEY (user_id) REFERENCES Users(user_id)
     )
@@ -72,29 +82,29 @@ class appDatabase {
   ''');
       // เพิ่มข้อมูลลงในตาราง
       await db.rawInsert('''
-    INSERT INTO Hotels (hotel_id, name, address, city, ratings , img, lat, long, displacement)
-    VALUES (1, 'Hotel A', '123 Main St.', 'bangkok' , '4.2', 'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=450x450', '13.113493', '100.922488', 1),
-           (2, 'Hotel B', '456 Elm St.', 'chon buri', '4.5', 'https://pix8.agoda.net/hotelImages/2011272/-1/826c738efa75af641b8ff780c1ac62bc.jpg?ce=0&s=450x450', '13.11476', '100.92624', 1),
-           (3, 'Hotel C', '789 Elm St.', 'surin', '4.7', 'https://pix8.agoda.net/hotelImages/10859/-1/107b911e9ca63bb87d2747df2b6ad8bd.jpg?ca=14&ce=1&s=450x450', '13.116296', '100.914315', 1),
-           (4, 'Centara Life Maris Resort', '94 najomtian R.', 'bangkok', '4.8', 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/14/a2/13/swimming-pool-3.jpg?w=300&h=300&s=1', '13.12430', '100.91681', 1),
-           (5, 'Avani Pattaya Resort', '21/8 Liebchayhad R. ', 'bangkok', '4.9', 'https://pix8.agoda.net/hotelImages/10859/-1/107b911e9ca63bb87d2747df2b6ad8bd.jpg?ca=14&ce=1&s=450x450', '13.10594', '100.91458', 1)
+    INSERT INTO Hotels (hotel_id, name, address, city, ratings , img, lat, long, displacement,lowest , hotel_description)
+    VALUES (1, 'Hotel A', '123 Main St.', 'bangkok' , '4.2', 'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=450x450', '13.113493', '100.922488', 1 ,NULL ,"The Jianguo Hotel Qianmen is located near Tiantan Park, just a 10-minute walk from the National Center for the Performing Arts and Tian'anmen Square. Built in 1956 it has old school charm and many rooms still feature high, crown-molded ceilings. A 2012 renovation brought all rooms and services up to modern day scratch and guestrooms come equipped with free Wi-Fi and all the usual amenities required for a comfortable stay."),
+           (2, 'Hotel B', '456 Elm St.', 'chon buri', '4.5', 'https://pix8.agoda.net/hotelImages/2011272/-1/826c738efa75af641b8ff780c1ac62bc.jpg?ce=0&s=450x450', '13.11476', '100.92624', 1,NULL,"Kai Heng Century Hotel offers ultimate comfort and luxury. This 4-storied hotel is a beautiful combination of traditional grandeur and modern facilities. The 255 exclusive guest rooms are furnished with a range of modern amenities such as television and internet access. International direct-dial phone and safe are also available in any of these rooms. Wake-up call facility is also available in these rooms."),
+           (3, 'Hotel C', '789 Elm St.', 'surin', '4.7', 'https://pix8.agoda.net/hotelImages/10859/-1/107b911e9ca63bb87d2747df2b6ad8bd.jpg?ca=14&ce=1&s=450x450', '13.116296', '100.914315', 1,NULL,"Monteverde Country Lodge is a quiet, comfortable hotel located near the Ecological Sanctuary and the Monteverde Butterfly Gardens in an area called Cerro Plano, an ideal location half way between the Monteverde Cloud Forest reserve and the main village of the Monteverde area (Santa Elena), in close proximity to several restaurants and activities. All rooms have private bathrooms with hot water."),
+           (4, 'Centara Life Maris Resort', '94 najomtian R.', 'bangkok', '4.8', 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/14/a2/13/swimming-pool-3.jpg?w=300&h=300&s=1', '13.12430', '100.91681', 1 ,NULL,"Ibis London Wembley hotel is in close proximity to Wembley Stadium and Wembley Arena, both just a few minutes walk from the hotel. Each of the 210 modern guest rooms have wireless internet and satellite TV. The hotel has excellent local transport connections into central London."),
+           (5, 'Avani Pattaya Resort', '21/8 Liebchayhad R. ', 'bangkok', '4.9', 'https://pix8.agoda.net/hotelImages/10859/-1/107b911e9ca63bb87d2747df2b6ad8bd.jpg?ca=14&ce=1&s=450x450', '13.10594', '100.91458', 1 , NULL ,"Only 20 minutes by tube from London's bustling West End, Ibis London Earls Court puts you close to plenty of prominent nearby attractions including the Olympia Conference Centre, Hyde Park, Knightsbridge and Kensington's thriving high street and business district. Inviting, modern and cozy, with a comfortable bed and a functional bathroom, everything you need for a pleasant stay.")
   ''');
       await db.rawInsert('''
-    INSERT INTO Rooms (room_id, room_number, type, price, hotel_id)
-    VALUES (101, '101', 'Single', 79.00, 1),
-           (102, '102', 'Double', 89.00, 1),
-           (201, '201', 'Suite', 20.00, 2),
-           (202, '202', 'Deluxe', 49.00, 2),
-           (301, '301', 'Single', 50.00, 3),
-           (302, '302', 'Deluxe', 60.00, 3),
-           (401, '401', 'Single', 79.00, 4),
-           (501, '501', 'Deluxe', 99.00, 5)
+    INSERT INTO Rooms (room_id, room_number, type, price, hotel_id , room_img , adult , child , room_description)
+    VALUES (101, '101', 'Single', 79.00, 1 , 'https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' , 2 , 1 , 'Our king size four poster provides views over landscaped gardens. It has a seating area, ample storage, digital safe and mini fridge.'),
+           (102, '102', 'Double', 89.00, 1 , 'https://images.pexels.com/photos/262048/pexels-photo-262048.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 2 , 1 , 'Our king size sleigh bedded also provides views over landscaped gardens. It has ample storage, a seating area, digital safe and mini fridge.'),
+           (201, '201', 'Suite', 20.00, 2 , 'https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' , 2 , 1 , 'Our Deluxe king size room has a seating area, ample storage, digital safe and mini fridge. This room can also be configured with an extra roll-away bed for families of 3.'),
+           (202, '202', 'Deluxe', 49.00, 2 , 'https://images.pexels.com/photos/210265/pexels-photo-210265.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 2 , 1 , 'Our Deluxe Twin/Large Double also provides views over landscaped gardens. It has a seating area, digital safe and mini fridge. This room can be configured with either 2 single beds or zip and linked to provide a large double bed.'),
+           (301, '301', 'Single', 50.00, 3 , 'https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' , 2 , 1 , 'As our smallest budget rooms, the Compact bedrooms are suited for single occupancy or short-stay double occupancy as they have limited space and storage.'),
+           (302, '302', 'Deluxe', 60.00, 3 , 'https://images.pexels.com/photos/271643/pexels-photo-271643.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' , 2 , 1 , 'Our king size four poster provides views over landscaped gardens. It has a seating area, ample storage, digital safe and mini fridge.'),
+           (401, '401', 'Single', 79.00, 4 , 'https://images.pexels.com/photos/210604/pexels-photo-210604.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' , 2 , 1 ,'Our Deluxe king size room has a seating area, ample storage, digital safe and mini fridge. This room can also be configured with an extra roll-away bed for families of 3.'),
+           (501, '501', 'Deluxe', 99.00, 5 , 'https://images.pexels.com/photos/279746/pexels-photo-279746.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' , 2 , 1 ,'Our king size four poster provides views over landscaped gardens. It has a seating area, ample storage, digital safe and mini fridge.')
   ''');
       await db.rawInsert('''
-    INSERT INTO Bookings (booking_id, room_id, user_id, checkin_date, checkout_date)
-    VALUES (1, 101, 1001, '2024-02-01', '2024-02-03'),
-           (2, 201, 1002, '2024-02-05', '2024-02-08'),
-           (3, 301, 1002, '2024-02-10', '2024-02-12')
+    INSERT INTO Bookings (booking_id, room_id, user_id, checkin_date, checkout_date ,first_name , last_name ,email , phone_number)
+    VALUES (1, 101, 1001, '2024-02-01', '2024-02-03', NULL , NULL ,NULL ,NULL),
+           (2, 201, 1002, '2024-02-05', '2024-02-08',NULL , NULL , NULL ,NULL),
+           (3, 301, 1002, '2024-02-10', '2024-02-12',NULL ,NULL ,NULL ,NULL)
   ''');
       await db.rawInsert('''
     INSERT INTO Users (user_id, name, email)
@@ -141,6 +151,9 @@ class appDatabase {
         address: result[index]['address'],
         city: result[index]['city'],
         img: result[index]['img'],
+        lowest: result[index]['lowest'],
+        hotelDescription: result[index]['hotel_description'],
+        ratings: result[index]['ratings'],
       ),
     );
   }
@@ -161,6 +174,9 @@ class appDatabase {
         address: result[index]['address'],
         city: result[index]['city'],
         img: result[index]['img'],
+        lowest: result[index]['lowest'],
+        hotelDescription: result[index]['hotel_description'],
+        ratings: result[index]['ratings'],
       ),
     );
   }
@@ -270,6 +286,10 @@ class appDatabase {
         type: result[index]['type'],
         price: result[index]['price'],
         hotelId: result[index]['hotel_id'],
+        roomImg: result[index]['room_img'],
+        adult: result[index]['adult'],
+        child: result[index]['child'],
+        roomDescription: result[index]['room_descriptipn'],
       ),
     );
   }
@@ -394,5 +414,62 @@ class appDatabase {
         displacement: maps[index]['displacement'],
       ),
     );
+  }
+
+  Future<HotelModel?> getHotelDetailById(int hotelId) async {
+    Database database = await openDatabase('hotelDB.db');
+    List<Map<String, dynamic>> result = await database.rawQuery(
+      // 'SELECT * FROM Hotels h WHERE h.hotel_id = ?',
+      //----
+      '''SELECT h.hotel_id , h.name , h.address , h.city , h.img , MIN(r.price) as lowest , h.hotel_description , h.ratings
+      FROM Hotels h
+      JOIN Rooms r on r.hotel_id = h.hotel_id
+      WHERE h.hotel_id = ?
+      GROUP BY h.name , h.address , h.city''',
+      //---
+      [hotelId],
+    );
+
+    if (result.isNotEmpty) {
+      return HotelModel.fromMap(result.first);
+    } else {
+      return null;
+    }
+  }
+
+  Future<List<RoomModel?>> getRoomDetailById(int hotelId) async {
+    Database database = await openDatabase('hotelDB.db');
+    List<Map<String, dynamic>> result = await database.rawQuery(
+      ''' SELECT r.room_id , r.room_number , r.type , r.price , r.hotel_id, r.room_img ,r.adult , r.child , r.room_description
+          FROM Rooms r
+          JOIN Hotels h on h.hotel_id = r.hotel_id
+          WHERE r.hotel_id = ? ''',
+      [hotelId],
+    );
+    List<RoomModel?> rooms = [];
+    for (var item in result) {
+      rooms.add(RoomModel.fromMap(item));
+    }
+    return rooms;
+  }
+
+  Future<List<FacilitiesHotel?>> getFacById(int hotelId) async {
+    Database database = await openDatabase('hotelDB.db');
+    List<Map<String, dynamic>> result = await database.rawQuery(
+      ''' 
+    SELECT f.facilities_id, f.facilities_name 
+    FROM Facilities f
+    JOIN HotelFacilities hf ON f.facilities_id = hf.facilities_id
+    WHERE hf.hotel_id = ?
+    ''',
+      [hotelId],
+    );
+    List<FacilitiesHotel?> fac = result
+        .map((map) => FacilitiesHotel(
+              facilities_id: map['facilities_id'],
+              facilities_name: map['facilities_name'],
+            ))
+        .toList();
+    return fac;
   }
 }

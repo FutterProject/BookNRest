@@ -47,6 +47,8 @@ dependencies:
   location: ^5.0.3
   google_maps_flutter: ^2.5.3
   geolocator: ^10.1.0
+  custom_radio_group_list: ^1.1.2
+  upi_payment_qrcode_generator: ^1.4.0
   # geocoding: ^2.1.1
 
 dev_dependencies:

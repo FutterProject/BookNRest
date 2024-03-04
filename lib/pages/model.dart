@@ -5,21 +5,30 @@ class HotelModel {
   final String city;
   final String img;
   final int? countFacility;
-  HotelModel({
-    this.id,
-    required this.name,
-    required this.address,
-    required this.city,
-    required this.img,
-    this.countFacility,
-  });
+  final double? lowest;
+  final String hotelDescription;
+  final double ratings;
+  HotelModel(
+      {this.id,
+      required this.name,
+      required this.address,
+      required this.city,
+      required this.img,
+      this.countFacility,
+      required this.lowest,
+      required this.hotelDescription,
+      required this.ratings});
   HotelModel.fromMap(Map<String, dynamic> item)
       : id = item['id'],
         name = item['name'],
         address = item['address'],
         city = item['city'],
         img = item['img'],
-        countFacility = item['facility_count'];
+        countFacility = item['facility_count'],
+        lowest = item['lowest'],
+        hotelDescription = item['hotel_description'],
+        ratings = item['ratings'];
+
   Map<String, Object?> toMap() {
     return {
       'id': id,
@@ -27,17 +36,20 @@ class HotelModel {
       'address': address,
       'city': city,
       'img': img,
-      'facility_count': countFacility
+      'facility_count': countFacility,
     };
   }
 }
-
 class RoomModel {
   final int? roomId;
   final String roomNumber;
   final String type;
   final double price;
   final int hotelId;
+  final String roomImg;
+  final int adult;
+  final int child;
+  final String roomDescription;
 
   RoomModel({
     this.roomId,
@@ -45,6 +57,10 @@ class RoomModel {
     required this.type,
     required this.price,
     required this.hotelId,
+    required this.roomImg,
+    required this.adult,
+    required this.child,
+    required this.roomDescription,
   });
 
   RoomModel.fromMap(Map<String, dynamic> item)
@@ -52,7 +68,11 @@ class RoomModel {
         roomNumber = item['room_number'],
         type = item['type'],
         price = item['price'],
-        hotelId = item['hotel_id'];
+        hotelId = item['hotel_id'],
+        roomImg = item['room_img'],
+        adult = item['adult'],
+        child = item['child'],
+        roomDescription = item['room_description'];
 
   Map<String, Object?> toMap() {
     return {
@@ -61,6 +81,10 @@ class RoomModel {
       'type': type,
       'price': price,
       'hotel_id': hotelId,
+      'room_img': roomImg,
+      'adult': adult,
+      'child': child,
+      'room_description': roomDescription,
     };
   }
 }
