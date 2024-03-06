@@ -1,3 +1,4 @@
+import 'package:book_and_rest/pages/home.dart';
 import 'package:book_and_rest/pages/model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -80,6 +81,22 @@ class appDatabase {
       PRIMARY KEY (hotel_id,facilities_id)
     )
   ''');
+      await db.execute('''
+    CREATE TABLE BookingDetail(
+            bookingId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+            hotelId INTEGER, 
+            roomId INTEGER, 
+            selectedRoomCount INTEGER, 
+            firstName TEXT, 
+            lastName TEXT, 
+            email TEXT, 
+            phone TEXT,
+            checkInDate DATE,
+            checkOutDate DATE
+            )
+            ''');
+      print(
+          'wowowowowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwooooooooooooooooooooooooooo');
       // เพิ่มข้อมูลลงในตาราง
       await db.rawInsert('''
     INSERT INTO Hotels (hotel_id, name, address, city, ratings , img, lat, long, displacement,lowest , hotel_description)
@@ -102,9 +119,9 @@ class appDatabase {
   ''');
       await db.rawInsert('''
     INSERT INTO Bookings (booking_id, room_id, user_id, checkin_date, checkout_date ,first_name , last_name ,email , phone_number)
-    VALUES (1, 101, 1001, '2024-02-01', '2024-02-03', NULL , NULL ,NULL ,NULL),
-           (2, 201, 1002, '2024-02-05', '2024-02-08',NULL , NULL , NULL ,NULL),
-           (3, 301, 1002, '2024-02-10', '2024-02-12',NULL ,NULL ,NULL ,NULL)
+    VALUES (1, 101, 1001, '2024-02-01', '2024-02-03', 'perapon' , 'kaewtaweesap' , 'perapon.ka@ku.th' , '0646097891'),
+           (2, 201, 1002, '2024-02-05', '2024-02-08',' chick', 'ken' , 'kfckfc@kfc.com' ,'012345678'),
+           (3, 301, 1002, '2024-02-10', '2024-02-12','mobile' ,'app' ,'abc@abc.com' ,'0132154')
   ''');
       await db.rawInsert('''
     INSERT INTO Users (user_id, name, email)
@@ -154,6 +171,8 @@ class appDatabase {
         lowest: result[index]['lowest'],
         hotelDescription: result[index]['hotel_description'],
         ratings: result[index]['ratings'],
+        lat: result[index]['lat'],
+        long: result[index]['long'],
       ),
     );
   }
@@ -177,6 +196,8 @@ class appDatabase {
         lowest: result[index]['lowest'],
         hotelDescription: result[index]['hotel_description'],
         ratings: result[index]['ratings'],
+        lat: result[index]['lat'],
+        long: result[index]['long'],
       ),
     );
   }
@@ -421,7 +442,7 @@ class appDatabase {
     List<Map<String, dynamic>> result = await database.rawQuery(
       // 'SELECT * FROM Hotels h WHERE h.hotel_id = ?',
       //----
-      '''SELECT h.hotel_id , h.name , h.address , h.city , h.img , MIN(r.price) as lowest , h.hotel_description , h.ratings
+      '''SELECT h.hotel_id , h.name , h.address , h.city , h.img , MIN(r.price) as lowest , h.hotel_description ,h.lat ,h.long, h.ratings 
       FROM Hotels h
       JOIN Rooms r on r.hotel_id = h.hotel_id
       WHERE h.hotel_id = ?
@@ -472,4 +493,23 @@ class appDatabase {
         .toList();
     return fac;
   }
+
+  Future<void> InsertBookingDetail(
+      BookingDetailModel bookingDetailModel) async {
+    var db = await initializedb();
+    await db.insert('bookingdetail', bookingDetailModel.toMap());
+  }
+
+  Future<List<BookingDetailModel>> getBookingDetail() async {
+    var db = await initializedb();
+    final List<Map<String, dynamic>> maps = await db.rawQuery('''
+    SELECT * FROM BookingDetail
+  ''');
+    // แปลง List<Map<String, dynamic>> เป็น List<Hotel>
+    return List.generate(maps.length, (i) {
+      return BookingDetailModel.fromMap(maps[i]);
+    });
+  }
 }
+
+

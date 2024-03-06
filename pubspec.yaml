@@ -49,6 +49,7 @@ dependencies:
   geolocator: ^10.1.0
   custom_radio_group_list: ^1.1.2
   upi_payment_qrcode_generator: ^1.4.0
+  shared_preferences: ^2.2.2
   # geocoding: ^2.1.1
 
 dev_dependencies:

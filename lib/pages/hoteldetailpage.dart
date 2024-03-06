@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'database.dart';
 
+//ในส่วนของหน้านี่มีหน้าที่ให้ user ที่เลือกโรงแรมแล้วต้องการดูรายละเอียดของโรงแรมอย่างชัดเจนอีกครั้ง
+//โดยทุกอย่่างจะเหมือนหน้าhoteldetailแต่จะไม่มีปุ่มไปต่อ ถ้าไม่เหมือนหน้า hoteldetail ต้องแก้
 class HotelDetailPage extends StatefulWidget {
   final int hotelId;
 

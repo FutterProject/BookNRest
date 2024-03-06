@@ -8,6 +8,8 @@ class HotelModel {
   final double? lowest;
   final String hotelDescription;
   final double ratings;
+  final String lat;
+  final String long;
   HotelModel(
       {this.id,
       required this.name,
@@ -17,7 +19,9 @@ class HotelModel {
       this.countFacility,
       required this.lowest,
       required this.hotelDescription,
-      required this.ratings});
+      required this.ratings,
+      required this.lat,
+      required this.long});
   HotelModel.fromMap(Map<String, dynamic> item)
       : id = item['id'],
         name = item['name'],
@@ -27,7 +31,9 @@ class HotelModel {
         countFacility = item['facility_count'],
         lowest = item['lowest'],
         hotelDescription = item['hotel_description'],
-        ratings = item['ratings'];
+        ratings = item['ratings'],
+        lat = item['lat'],
+        long = item['long'];
 
   Map<String, Object?> toMap() {
     return {
@@ -37,9 +43,12 @@ class HotelModel {
       'city': city,
       'img': img,
       'facility_count': countFacility,
+      'lat': lat,
+      'long': long,
     };
   }
 }
+
 class RoomModel {
   final int? roomId;
   final String roomNumber;
@@ -280,6 +289,57 @@ class HotelAllModel {
       'lat': lat,
       'long': long,
       'displacement': displacement,
+    };
+  }
+}
+
+class BookingDetailModel {
+  final int? bookingId;
+  final int hotelId;
+  final int roomId;
+  final int selectedRoomCount;
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String phone;
+  final String? checkInDate;
+  final String? checkOutDate;
+  BookingDetailModel(
+      {this.bookingId,
+      required this.hotelId,
+      required this.roomId,
+      required this.selectedRoomCount,
+      required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.phone,
+      required this.checkInDate,
+      required this.checkOutDate});
+
+  BookingDetailModel.fromMap(Map<String, dynamic> item)
+      : bookingId = item['bookingId'],
+        hotelId = item['hotelId'],
+        roomId = item['roomId'],
+        selectedRoomCount = item['selectedRoomCount'],
+        firstName = item['firstName'],
+        lastName = item['lastName'],
+        email = item['email'],
+        phone = item['phone'],
+        checkInDate = item['checkInDate'],
+        checkOutDate = item['checkOutDate'];
+
+  Map<String, dynamic> toMap() {
+    return {
+      'bookingId': bookingId,
+      'hotelId': hotelId,
+      'roomId': roomId,
+      'selectedRoomCount': selectedRoomCount,
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'phone': phone,
+      'checkInDate': checkInDate,
+      'checkOutDate': checkOutDate,
     };
   }
 }

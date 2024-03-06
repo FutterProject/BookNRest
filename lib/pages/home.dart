@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:book_and_rest/pages/database.dart';
 import 'package:book_and_rest/pages/destination.dart';
 import 'package:book_and_rest/pages/hoteldetail.dart';
+import 'package:book_and_rest/pages/index.dart';
 import 'package:book_and_rest/pages/model.dart';
 import 'package:book_and_rest/pages/searchHotel.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:custom_calender_picker2/custom_calender_picker2.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:geolocator/geolocator.dart';
 appDatabase db = appDatabase();
@@ -33,9 +35,6 @@ class _Home extends State<Home> {
 
   bool submit = false;
   final formKey = GlobalKey<FormState>();
-  final searchController = TextEditingController();
-  var checkInController = TextEditingController();
-  var checkOutController = TextEditingController();
   String? _selectedProvince;
   String? selectedProvince;
 
@@ -76,7 +75,9 @@ class _Home extends State<Home> {
                           TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                   ),
+
                   SizedBox(height: 10),
+
                   GestureDetector(
                     onTap: () async {
                       selectedProvince = await Navigator.push(
@@ -174,6 +175,7 @@ class _Home extends State<Home> {
                               print("=========Click on Search=========");
                               // db.showAllRoom();
                             });
+
                             var sendData = [
                               _selectedProvince.toString().toLowerCase(),
                               rangeDateTime!.start.toString().substring(0, 10),
@@ -347,7 +349,13 @@ class _Home extends State<Home> {
                   child: Stack(
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
+                          final SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          await prefs.setString('checkindate',
+                              rangeDateTime!.start.toString().substring(0, 10));
+                          await prefs.setString('checkoutdate',
+                              rangeDateTime!.end.toString().substring(0, 10));
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -686,6 +694,7 @@ class _Home extends State<Home> {
         } else {
           return const Center(child: Text('No hotels available'));
         }
+
         // แสดงตัวโหลดขณะรอข้อมูล
       },
     );

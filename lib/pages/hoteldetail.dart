@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:book_and_rest/pages/model.dart';
 import 'package:book_and_rest/pages/roomdetail.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'database.dart';
 
@@ -14,12 +17,15 @@ class HotelDetail extends StatefulWidget {
 }
 
 class _HotelDetailState extends State<HotelDetail> {
+  // Completer<GoogleMapController> _controller = Completer();
   appDatabase db = appDatabase();
   late Future<HotelModel?> _futureHotel;
+  bool _fav = false;
   @override
   void initState() {
     super.initState();
     _futureHotel = db.getHotelDetailById(widget.hotelId);
+    print("Hotel ID: ${widget.hotelId}");
   }
 
   @override
@@ -29,7 +35,13 @@ class _HotelDetailState extends State<HotelDetail> {
       appBar: AppBar(
         actions: [
           IconButton(
-              onPressed: () {}, icon: Icon(Icons.favorite_border_outlined))
+            onPressed: () {
+              setState(() {
+                _fav = !_fav;
+              });
+            },
+            icon: new Icon(_fav ? Icons.favorite : Icons.favorite_border),
+          )
         ],
         title: Text('Hotel Detail'),
         shadowColor: Colors.black,
@@ -39,6 +51,8 @@ class _HotelDetailState extends State<HotelDetail> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             HotelModel hotel = snapshot.data!;
+            double lat = double.parse(hotel.lat);
+            double long = double.parse(hotel.long);
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -185,14 +199,34 @@ class _HotelDetailState extends State<HotelDetail> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(0, 15, 0, 70),
-                    child: Image.network(
-                      //google map img
-                      'https://i.stack.imgur.com/dApg7.png',
-                      width: 300,
+                    padding: EdgeInsets.fromLTRB(30, 15, 30, 70),
+                    child: Container(
                       height: 300,
+                      // child: GoogleMap(
+                      //   mapType: MapType.normal,
+                      //   initialCameraPosition: CameraPosition(
+                      //     target: LatLng(13.7650836, 100.5379664),
+                      //     zoom: 16,
+                      //   ),
+                      //   onMapCreated: (GoogleMapController controller) {
+                      //     _controller.complete(controller);
+                      //   },
+                      // )
+                      // child: GoogleMap(
+                      //   initialCameraPosition: CameraPosition(
+                      //     target: LatLng(lat, long),
+                      //     zoom: 15,
+                      //   ),
+                      //   markers: Set<Marker>.of([
+                      //     Marker(
+                      //       markerId: MarkerId('hotel_location'),
+                      //       position: LatLng(lat, long),
+                      //       infoWindow: InfoWindow(title: 'Hotel Location'),
+                      //     ),
+                      //   ]),
+                      // ),
                     ),
-                  ),
+                  )
                 ],
               ),
             );
@@ -243,6 +277,7 @@ void roomAmenitiesModalBottomSheet(BuildContext context, int hotelId) {
             AsyncSnapshot<List<FacilitiesHotel?>> snapshot) {
           if (snapshot.hasData) {
             List<FacilitiesHotel?> facilities = snapshot.data!;
+
             // check para has data
             // print('hotelId : ${hotelId}');
             // print('Facilities count: ${facilities.length}');

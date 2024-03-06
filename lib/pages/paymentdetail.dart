@@ -1,8 +1,11 @@
 import 'package:book_and_rest/pages/database.dart';
+import 'package:book_and_rest/pages/home.dart';
 import 'package:book_and_rest/pages/hoteldetailpage.dart';
+import 'package:book_and_rest/pages/index.dart';
 import 'package:book_and_rest/pages/model.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upi_payment_qrcode_generator/upi_payment_qrcode_generator.dart';
 
 class PaymentDetail extends StatefulWidget {
@@ -10,12 +13,21 @@ class PaymentDetail extends StatefulWidget {
   final int roomId;
   final int selectedRoomCount;
   final RoomModel room;
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String phone;
 
-  PaymentDetail(
-      {required this.hotelId,
-      required this.roomId,
-      required this.selectedRoomCount,
-      required this.room});
+  PaymentDetail({
+    required this.hotelId,
+    required this.roomId,
+    required this.selectedRoomCount,
+    required this.room,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.phone,
+  });
 
   @override
   State<PaymentDetail> createState() => _PaymentDetailState();
@@ -63,7 +75,7 @@ class _PaymentDetailState extends State<PaymentDetail> {
           FutureBuilder<HotelModel?>(
             future: _futureHotel,
             builder: (context, snapshot) {
-             if (snapshot.hasData) {
+              if (snapshot.hasData) {
                 HotelModel hotel = snapshot.data!;
                 return Padding(
                     padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
@@ -358,10 +370,12 @@ class _PaymentDetailState extends State<PaymentDetail> {
                       value: 2,
                       groupValue: selectedPaymentMethod,
                       onChanged: (value) {
-                        setState(() {
-                          selectedPaymentMethod = value!;
-                          isVisible = true;
-                        });
+                        setState(
+                          () {
+                            selectedPaymentMethod = value!;
+                            isVisible = true;
+                          },
+                        );
                       },
                     ),
                   ],
@@ -378,7 +392,26 @@ class _PaymentDetailState extends State<PaymentDetail> {
           height: 40,
           child: FittedBox(
             child: FloatingActionButton.extended(
-              onPressed: () {},
+              onPressed: () async {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Home()));
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                final String? cid = prefs.getString('checkindate');
+                final String? cod = prefs.getString('checkoutdate');
+                BookingDetailModel bookingDetailModel = BookingDetailModel(
+                  hotelId: widget.hotelId,
+                  roomId: widget.roomId,
+                  selectedRoomCount: widget.selectedRoomCount,
+                  firstName: widget.firstName,
+                  lastName: widget.lastName,
+                  email: widget.email,
+                  phone: widget.phone,
+                  checkInDate: cid,
+                  checkOutDate: cod,
+                );
+                await db.InsertBookingDetail(bookingDetailModel);
+              },
               label: Text(
                 'BOOK NOW',
                 style: TextStyle(color: Colors.white, fontSize: 17),
@@ -394,18 +427,20 @@ class _PaymentDetailState extends State<PaymentDetail> {
 
 OutlineInputBorder myinputborder() {
   return OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10)),
-      borderSide: BorderSide(
-        color: Color.fromARGB(255, 196, 179, 218),
-        width: 3,
-      ));
+    borderRadius: BorderRadius.all(Radius.circular(10)),
+    borderSide: BorderSide(
+      color: Color.fromARGB(255, 196, 179, 218),
+      width: 3,
+    ),
+  );
 }
 
 OutlineInputBorder myfocusborder() {
   return OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10)),
-      borderSide: BorderSide(
-        color: Color(0xFF7a2ed6),
-        width: 3,
-      ));
+    borderRadius: BorderRadius.all(Radius.circular(10)),
+    borderSide: BorderSide(
+      color: Color(0xFF7a2ed6),
+      width: 3,
+    ),
+  );
 }

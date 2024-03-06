@@ -465,6 +465,10 @@ class _GuestDetailState extends State<GuestDetail> {
                           hotelId: widget.hotelId,
                           roomId: roomId,
                           room: widget.room,
+                          firstName: _firstNameController.text,
+                          lastName: _lastNameController.text,
+                          email: _emailController.text,
+                          phone: _phoneController.text,
                         ),
                       ),
                     );
