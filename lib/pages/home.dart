@@ -166,7 +166,14 @@ class _Home extends State<Home> {
                       ),
                       const SizedBox(width: 10),
                       ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          final SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          await prefs.setString('checkindate',
+                              rangeDateTime!.start.toString().substring(0, 10));
+                          await prefs.setString('checkoutdate',
+                              rangeDateTime!.end.toString().substring(0, 10));
+
                           if (formKey.currentState!.validate() &&
                               rangeDateTime != null &&
                               _selectedProvince != null) {
@@ -607,7 +614,13 @@ class _Home extends State<Home> {
                 HotelAllModel hotel = snapshot.data![index];
                 return Card(
                     child: GestureDetector(
-                        onTap: () {
+                        onTap: () async {
+                          final SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          await prefs.setString('checkindate',
+                              rangeDateTime!.start.toString().substring(0, 10));
+                          await prefs.setString('checkoutdate',
+                              rangeDateTime!.end.toString().substring(0, 10));
                           Navigator.push(
                             context,
                             MaterialPageRoute(

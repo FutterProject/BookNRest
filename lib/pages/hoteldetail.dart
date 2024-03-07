@@ -202,29 +202,19 @@ class _HotelDetailState extends State<HotelDetail> {
                     padding: EdgeInsets.fromLTRB(30, 15, 30, 70),
                     child: Container(
                       height: 300,
-                      // child: GoogleMap(
-                      //   mapType: MapType.normal,
-                      //   initialCameraPosition: CameraPosition(
-                      //     target: LatLng(13.7650836, 100.5379664),
-                      //     zoom: 16,
-                      //   ),
-                      //   onMapCreated: (GoogleMapController controller) {
-                      //     _controller.complete(controller);
-                      //   },
-                      // )
-                      // child: GoogleMap(
-                      //   initialCameraPosition: CameraPosition(
-                      //     target: LatLng(lat, long),
-                      //     zoom: 15,
-                      //   ),
-                      //   markers: Set<Marker>.of([
-                      //     Marker(
-                      //       markerId: MarkerId('hotel_location'),
-                      //       position: LatLng(lat, long),
-                      //       infoWindow: InfoWindow(title: 'Hotel Location'),
-                      //     ),
-                      //   ]),
-                      // ),
+                      child: GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(lat, long),
+                          zoom: 15,
+                        ),
+                        markers: Set<Marker>.of([
+                          Marker(
+                            markerId: MarkerId('hotel_location'),
+                            position: LatLng(lat, long),
+                            infoWindow: InfoWindow(title: 'Hotel Location'),
+                          ),
+                        ]),
+                      ),
                     ),
                   )
                 ],

@@ -393,8 +393,8 @@ class _PaymentDetailState extends State<PaymentDetail> {
           child: FittedBox(
             child: FloatingActionButton.extended(
               onPressed: () async {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Home()));
+                Navigator.of(context).popUntil((route) => route.isFirst);
+
                 final SharedPreferences prefs =
                     await SharedPreferences.getInstance();
                 final String? cid = prefs.getString('checkindate');
