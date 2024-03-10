@@ -1,6 +1,9 @@
 import 'package:book_and_rest/pages/database.dart';
+import 'package:book_and_rest/pages/hoteldetail.dart';
 import 'package:book_and_rest/pages/model.dart';
+import 'package:book_and_rest/userPreferences.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class MyBooking extends StatefulWidget {
   const MyBooking({super.key});
@@ -11,13 +14,20 @@ class MyBooking extends StatefulWidget {
 
 @override
 class _MyBooking extends State<MyBooking> {
-  late Future<List<BookingDetailModel>> _futureBookingDetails;
+  // Future<List<BookingDetailModel>>? _futureBookingDetails;
   appDatabase db = appDatabase();
+  int? userId;
 
   @override
   void initState() {
     super.initState();
-    _futureBookingDetails = db.getBookingDetail();
+    // _futureBookingDetails = db.getBookingDetail(userId);
+    initializeUserId();
+  }
+
+  Future<void> initializeUserId() async {
+    userId = await UserPreferences.getUserId();
+    setState(() {});
   }
 
   @override
@@ -26,42 +36,90 @@ class _MyBooking extends State<MyBooking> {
       appBar: AppBar(
         title: Text('My Bookings'),
       ),
-      body: FutureBuilder<List<BookingDetailModel>>(
-        future: _futureBookingDetails,
+      body: _buildMyBookingDetails(),
+    );
+  }
+
+  _buildMyBookingDetails() {
+    print("buildNearest working....");
+    if (userId != null)
+      return FutureBuilder<List<BookingDetailModel>>(
+        future: db.getBookingDetail(userId!),
+        // future: _futureBookingDetails,
+        // ใช้ของพีแล้วมันไม่โชว์เอ๋อไรไม่รู้
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<BookingDetailModel> bookingDetails = snapshot.data!;
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            print('Error: ${snapshot.error}');
+            print('Stack trace: ${snapshot.stackTrace}');
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             return ListView.builder(
-              itemCount: bookingDetails.length,
+              shrinkWrap: true,
+              itemCount: snapshot.data!.length < 3 ? snapshot.data!.length : 3,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Booking ID: ${bookingDetails[index].bookingId}'),
-                      Text('Hotel ID: ${bookingDetails[index].hotelId}'),
-                      Text('Room ID: ${bookingDetails[index].roomId}'),
-                      Text(
-                          'Selected Room Count: ${bookingDetails[index].selectedRoomCount}'),
-                      Text('First Name: ${bookingDetails[index].firstName}'),
-                      Text('Last Name: ${bookingDetails[index].lastName}'),
-                      Text('Email: ${bookingDetails[index].email}'),
-                      Text('Phone: ${bookingDetails[index].phone}'),
-                      Text('CheckInDate: ${bookingDetails[index].checkInDate}'),
-                      Text(
-                          'CheckOutDate: ${bookingDetails[index].checkOutDate}')
-                    ],
+                BookingDetailModel hotel = snapshot.data![index];
+                return Card(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HotelDetail(
+                                  hotelId: hotel.hotelId,
+                                )),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            bottomLeft: Radius.circular(15),
+                            topRight: Radius.circular(15),
+                            bottomRight: Radius.circular(15),
+                          ),
+                          child: Image.network(
+                            '${hotel.hotelImg}',
+                            width: 150,
+                            height: 130,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Container(
+                            child: Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${hotel.hotelName}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Text(
+                                  'check-in : ${hotel.checkInDate}',
+                                ),
+                                Text('check-out : ${hotel.checkOutDate}'),
+                              ],
+                            ),
+                          ),
+                        ))
+                      ],
+                    ),
                   ),
                 );
               },
             );
           } else {
-            return Center(
-              child: Text('No bookings found.'),
-            );
+            return const Center(child: Text('Not booking yet'));
           }
+
+          // แสดงตัวโหลดขณะรอข้อมูล
         },
-      ),
-    );
+      );
   }
 }

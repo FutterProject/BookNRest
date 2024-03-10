@@ -50,6 +50,8 @@ dependencies:
   custom_radio_group_list: ^1.1.2
   upi_payment_qrcode_generator: ^1.4.0
   shared_preferences: ^2.2.2
+  http: ^1.2.0
+  animated_theme_switcher: ^2.0.1-nullsafety.0
   # geocoding: ^2.1.1
 
 dev_dependencies:
@@ -72,6 +74,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

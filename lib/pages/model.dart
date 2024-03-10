@@ -6,10 +6,10 @@ class HotelModel {
   final String img;
   final int? countFacility;
   final double? lowest;
-  final String hotelDescription;
+  final String? hotelDescription;
   final double ratings;
-  final String lat;
-  final String long;
+  final String? lat;
+  final String? long;
   HotelModel(
       {this.id,
       required this.name,
@@ -17,11 +17,11 @@ class HotelModel {
       required this.city,
       required this.img,
       this.countFacility,
-      required this.lowest,
-      required this.hotelDescription,
+      this.lowest,
+      this.hotelDescription,
       required this.ratings,
-      required this.lat,
-      required this.long});
+      this.lat,
+      this.long});
   HotelModel.fromMap(Map<String, dynamic> item)
       : id = item['id'],
         name = item['name'],
@@ -213,32 +213,65 @@ class FacilitiesHotel {
   }
 }
 
-class UserModel {
-  String? id;
-  String? email;
-  String? lat;
-  String? long;
+// class UserModel {
+//   String? id;
+//   String? email;
+//   String? lat;
+//   String? long;
 
-  UserModel({
-    this.id,
-    this.email,
-    this.lat,
-    this.long,
-  });
-  UserModel.fromMap(Map<String, dynamic> item)
-      : id = item['id'],
-        email = item['email'],
-        lat = item['lat'],
-        long = item['long'];
+//   UserModel({
+//     this.id,
+//     this.email,
+//     this.lat,
+//     this.long,
+//   });
+//   UserModel.fromMap(Map<String, dynamic> item)
+//       : id = item['id'],
+//         email = item['email'],
+//         lat = item['lat'],
+//         long = item['long'];
 
-  Map<String, Object?> toMap() {
-    return {
-      'id': id,
-      'email': email,
-      'lat': lat,
-      'long': long,
-    };
-  }
+//   Map<String, Object?> toMap() {
+//     return {
+//       'id': id,
+//       'email': email,
+//       'lat': lat,
+//       'long': long,
+//     };
+//   }
+// }
+class UsersModel {
+  final int? usrId;
+  String? usrName;
+  String usrEmail;
+  final String usrPassword;
+  String? address;
+  final int? role;
+
+  UsersModel(
+      {this.usrId,
+      this.usrName,
+      required this.usrEmail,
+      required this.usrPassword,
+      this.address,
+      this.role});
+
+  UsersModel.fromMap(Map<String, dynamic> item)
+      : usrId = item["userId"],
+        usrName = item["userName"],
+        usrEmail = item["userEmail"],
+        usrPassword = item["userPass"],
+        address = item["address"],
+        role = item['role'];
+
+  Map<String, dynamic> toMap() => {
+        "userId": usrId,
+        "userName": usrName,
+        "userEmail": usrEmail,
+        "userPass": usrPassword,
+        "address": address,
+        "role": role
+      };
 }
 
 class HotelAllModel {
@@ -304,17 +337,24 @@ class BookingDetailModel {
   final String phone;
   final String? checkInDate;
   final String? checkOutDate;
-  BookingDetailModel(
-      {this.bookingId,
-      required this.hotelId,
-      required this.roomId,
-      required this.selectedRoomCount,
-      required this.firstName,
-      required this.lastName,
-      required this.email,
-      required this.phone,
-      required this.checkInDate,
-      required this.checkOutDate});
+  final int? userId;
+  final String? hotelName;
+  final String? hotelImg;
+  BookingDetailModel({
+    this.bookingId,
+    required this.hotelId,
+    required this.roomId,
+    required this.selectedRoomCount,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.phone,
+    required this.checkInDate,
+    required this.checkOutDate,
+    this.userId,
+    this.hotelName,
+    this.hotelImg,
+  });
 
   BookingDetailModel.fromMap(Map<String, dynamic> item)
       : bookingId = item['bookingId'],
@@ -326,7 +366,10 @@ class BookingDetailModel {
         email = item['email'],
         phone = item['phone'],
         checkInDate = item['checkInDate'],
-        checkOutDate = item['checkOutDate'];
+        checkOutDate = item['checkOutDate'],
+        userId = item['userId'],
+        hotelName = item['name'],
+        hotelImg = item['img'];
 
   Map<String, dynamic> toMap() {
     return {
@@ -340,6 +383,26 @@ class BookingDetailModel {
       'phone': phone,
       'checkInDate': checkInDate,
       'checkOutDate': checkOutDate,
+      'userId': userId,
+      // 'name': hotelName,
+      // 'img': hotelImg,
+    };
+  }
+}
+
+class FavoriteHotel {
+  final int userId;
+  final int hotelId;
+
+  FavoriteHotel({
+    required this.userId,
+    required this.hotelId,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'userId': userId,
+      'hotel_id': hotelId,
     };
   }
 }

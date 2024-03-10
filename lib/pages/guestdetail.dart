@@ -208,9 +208,15 @@ class _GuestDetailState extends State<GuestDetail> {
                                 Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(20, 15, 0, 0),
-                                  child: Text(
-                                    '${widget.selectedRoomCount} x ${widget.room.type}',
-                                    style: TextStyle(fontSize: 25),
+                                  child: SizedBox(
+                                    width: 250,
+                                    child: Text(
+                                      '${widget.selectedRoomCount} x ${widget.room.type}',
+                                      style: TextStyle(
+                                        fontSize: 21,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 Padding(

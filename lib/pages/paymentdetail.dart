@@ -1,8 +1,10 @@
+import 'package:book_and_rest/hotelPreferences.dart';
 import 'package:book_and_rest/pages/database.dart';
 import 'package:book_and_rest/pages/home.dart';
 import 'package:book_and_rest/pages/hoteldetailpage.dart';
 import 'package:book_and_rest/pages/index.dart';
 import 'package:book_and_rest/pages/model.dart';
+import 'package:book_and_rest/userPreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,6 +44,10 @@ class _PaymentDetailState extends State<PaymentDetail> {
   int selectedPaymentMethod = 0;
   late List<int> selectedRoomCounts;
   bool isVisible = false;
+  int? userId;
+  int? hotelId;
+  String? hotelName;
+  String? hotelImg;
   final upiDetails =
       UPIDetails(upiID: "UPI ID", payeeName: "Payee Name", amount: 1);
 
@@ -59,6 +65,16 @@ class _PaymentDetailState extends State<PaymentDetail> {
     selectedRoomCount = widget.selectedRoomCount;
     _futureHotel = db.getHotelDetailById(widget.hotelId);
     _futureRooms = db.getRoomDetailById(widget.hotelId);
+    initializePref();
+  }
+
+  Future<void> initializePref() async {
+    userId = await UserPreferences.getUserId();
+    hotelId = await HotelPreferences.getHotelId();
+    hotelName = await HotelPreferences.getHotelName();
+    hotelImg = await HotelPreferences.getHotelImg();
+
+    setState(() {});
   }
 
   @override
@@ -204,15 +220,21 @@ class _PaymentDetailState extends State<PaymentDetail> {
                               Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(20, 15, 0, 0),
-                                child: Text(
-                                  '${widget.selectedRoomCount} x ${widget.room.type}',
-                                  style: TextStyle(fontSize: 25),
+                                child: SizedBox(
+                                  width: 250,
+                                  child: Text(
+                                    '${widget.selectedRoomCount} x ${widget.room.type}',
+                                    style: TextStyle(
+                                      fontSize: 21,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                                 child: Text(
-                                  'room price : ${widget.room.price}',
+                                  'room price : ${selectedRoom.price}',
                                   style: TextStyle(fontSize: 13),
                                 ),
                               ),
@@ -220,8 +242,8 @@ class _PaymentDetailState extends State<PaymentDetail> {
                                 padding:
                                     const EdgeInsets.fromLTRB(20, 15, 0, 0),
                                 child: Text(
-                                  'Max ${widget.room.adult} adults' +
-                                      ' | Max ${widget.room.child} child' +
+                                  'Max ${selectedRoom.adult} adults' +
+                                      ' | Max ${selectedRoom.child} child' +
                                       ' (0-11 years)',
                                   style: TextStyle(fontSize: 13),
                                 ),
@@ -392,26 +414,30 @@ class _PaymentDetailState extends State<PaymentDetail> {
           height: 40,
           child: FittedBox(
             child: FloatingActionButton.extended(
-              onPressed: () async {
-                Navigator.of(context).popUntil((route) => route.isFirst);
+              onPressed: selectedPaymentMethod == 2
+                  ? () async {
+                      Navigator.of(context).popUntil((route) => route.isFirst);
 
-                final SharedPreferences prefs =
-                    await SharedPreferences.getInstance();
-                final String? cid = prefs.getString('checkindate');
-                final String? cod = prefs.getString('checkoutdate');
-                BookingDetailModel bookingDetailModel = BookingDetailModel(
-                  hotelId: widget.hotelId,
-                  roomId: widget.roomId,
-                  selectedRoomCount: widget.selectedRoomCount,
-                  firstName: widget.firstName,
-                  lastName: widget.lastName,
-                  email: widget.email,
-                  phone: widget.phone,
-                  checkInDate: cid,
-                  checkOutDate: cod,
-                );
-                await db.InsertBookingDetail(bookingDetailModel);
-              },
+                      final SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      final String? cid = prefs.getString('checkindate');
+                      final String? cod = prefs.getString('checkoutdate');
+                      BookingDetailModel bookingDetailModel =
+                          BookingDetailModel(
+                        hotelId: widget.hotelId,
+                        roomId: widget.roomId,
+                        selectedRoomCount: widget.selectedRoomCount,
+                        firstName: widget.firstName,
+                        lastName: widget.lastName,
+                        email: widget.email,
+                        phone: widget.phone,
+                        checkInDate: cid,
+                        checkOutDate: cod,
+                        userId: userId,
+                      );
+                      await db.InsertBookingDetail(bookingDetailModel);
+                    }
+                  : null,
               label: Text(
                 'BOOK NOW',
                 style: TextStyle(color: Colors.white, fontSize: 17),
