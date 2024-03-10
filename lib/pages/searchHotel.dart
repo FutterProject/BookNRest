@@ -30,67 +30,70 @@ class _SearchHotel extends State<SearchHotel> {
     data = ModalRoute.of(context)?.settings.arguments as List;
     return Scaffold(
       appBar: AppBar(title: Text("Search Hotels")),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () async {
-                  result = await Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Filter()));
-                  setState(() {});
-                  print('===Test : $filtered');
-                },
-                child: Container(
-                  padding: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
+      body: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: 800),
+        child: Wrap(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () async {
+                    result = await Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Filter()));
+                    setState(() {});
+                    print('===Test : $filtered');
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            bottomLeft: Radius.circular(15))),
+                    child: Text(
+                      'Filter',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    _sortFunction();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(color: Colors.grey),
+// borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Text('Sort by', style: TextStyle(fontSize: 16)),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    nearestFunction();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey),
+// borderRadius: BorderRadius.circular(10.0),
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          bottomLeft: Radius.circular(15))),
-                  child: Text(
-                    'Filter',
-                    style: TextStyle(fontSize: 16),
+                          topRight: Radius.circular(15),
+                          bottomRight: Radius.circular(15)),
+                    ),
+                    child: Text('Nearest', style: TextStyle(fontSize: 16)),
                   ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  _sortFunction();
-                },
-                child: Container(
-                  padding: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.grey),
-                    // borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: Text('Sort by', style: TextStyle(fontSize: 16)),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  nearestFunction();
-                },
-                child: Container(
-                  padding: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.grey),
-                    // borderRadius: BorderRadius.circular(10.0),
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(15),
-                        bottomRight: Radius.circular(15)),
-                  ),
-                  child: Text('Nearest', style: TextStyle(fontSize: 16)),
-                ),
-              ),
-            ],
-          ),
-          _buildFiltered(),
-        ],
+              ],
+            ),
+            _buildFiltered(),
+          ],
+        ),
       ),
     );
   }
@@ -246,9 +249,9 @@ class _SearchHotel extends State<SearchHotel> {
           } else if (orderBy == 'farthest') {
             hotels.sort((a, b) => b.displacement!.compareTo(a.displacement!));
           }
-          return Expanded(
+          return SizedBox(
+            height: 800,
             child: ListView.builder(
-              // shrinkWrap: true,
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 HotelAllModel hotel = snapshot.data![index];
@@ -266,7 +269,12 @@ class _SearchHotel extends State<SearchHotel> {
                     child: Row(
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            bottomLeft: Radius.circular(15),
+                            topRight: Radius.circular(15),
+                            bottomRight: Radius.circular(15),
+                          ),
                           child: Image.network(
                             '${hotel.img}',
                             width: 150,
@@ -274,7 +282,8 @@ class _SearchHotel extends State<SearchHotel> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        Expanded(
+                        Container(
+                            child: Expanded(
                           child: Padding(
                             padding: EdgeInsets.all(8),
                             child: Column(
@@ -294,21 +303,24 @@ class _SearchHotel extends State<SearchHotel> {
                                     ),
                                     Text(
                                       '${hotel.displacement!.toString()} km.',
+                                      // hotel.city,
                                       maxLines: 1,
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     Icon(
                                       Symbols.star,
                                       color: Colors.yellow,
                                       fill: 1,
                                     ),
                                     Text(hotel.ratings.toString())
+                                    // Text("5")
                                   ],
                                 ),
                                 Row(
                                   children: [
                                     Text(
                                       '\$${hotel.min_price}',
+                                      // '\$80',
                                       style: TextStyle(
                                           color: Colors.deepPurple,
                                           fontWeight: FontWeight.bold,
@@ -323,7 +335,7 @@ class _SearchHotel extends State<SearchHotel> {
                               ],
                             ),
                           ),
-                        )
+                        ))
                       ],
                     ),
                   ),

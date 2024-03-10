@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:book_and_rest/hotelPreferences.dart';
 import 'package:book_and_rest/pages/model.dart';
 import 'package:book_and_rest/pages/roomdetail.dart';
-import 'package:book_and_rest/userPreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -22,48 +20,12 @@ class _HotelDetailState extends State<HotelDetail> {
   // Completer<GoogleMapController> _controller = Completer();
   appDatabase db = appDatabase();
   late Future<HotelModel?> _futureHotel;
-  bool? isFavorited;
-  int? userId;
-  int? hotelId;
-  String? hotelName;
-  String? hotelImg;
+  bool _fav = false;
   @override
   void initState() {
     super.initState();
     _futureHotel = db.getHotelDetailById(widget.hotelId);
     print("Hotel ID: ${widget.hotelId}");
-    // hotelId = widget.hotelId;
-    // hotelImg = widget
-    initializeUserId();
-  }
-
-  Future<void> initializeUserId() async {
-    userId = await UserPreferences.getUserId();
-    print("User ID : $userId");
-    setState(() {});
-  }
-
-  void setPref(int hId, String hName, String hImg) async {
-    hotelId = await HotelPreferences.setHotelId(hId);
-    hotelName = await HotelPreferences.setHotelName(hName);
-    hotelImg = await HotelPreferences.setHotelImg(hImg);
-  }
-
-  Future<bool> checkFavorite(int userId, int hotelId) async {
-    return await db.checkFavorite(userId, hotelId);
-  }
-
-  void toggleFavorite(Map data) async {
-    FavoriteHotel dataModel = FavoriteHotel(
-      userId: data['userId'],
-      hotelId: data['hotelId'],
-    );
-
-    if (isFavorited!) {
-      await db.removeFavHotels(dataModel);
-    } else {
-      await db.addFavHotels(dataModel);
-    }
   }
 
   @override
@@ -72,34 +34,14 @@ class _HotelDetailState extends State<HotelDetail> {
       extendBody: true,
       appBar: AppBar(
         actions: [
-          if (userId != null)
-            FutureBuilder<bool>(
-              future: checkFavorite(userId!, widget.hotelId),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Icon(Icons.error);
-                } else {
-                  isFavorited = snapshot.data ?? false;
-                  return IconButton(
-                    onPressed: () async {
-                      Map data = {
-                        'userId': userId,
-                        'hotelId': widget.hotelId,
-                      };
-                      toggleFavorite(data);
-                      print("test => $data");
-                      setState(() {
-                        isFavorited = !isFavorited!;
-                      });
-                    },
-                    icon: Icon(
-                        isFavorited! ? Icons.favorite : Icons.favorite_border),
-                  );
-                }
-              },
-            ),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _fav = !_fav;
+              });
+            },
+            icon: new Icon(_fav ? Icons.favorite : Icons.favorite_border),
+          )
         ],
         title: Text('Hotel Detail'),
         shadowColor: Colors.black,
@@ -109,10 +51,8 @@ class _HotelDetailState extends State<HotelDetail> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             HotelModel hotel = snapshot.data!;
-            double lat = double.parse(hotel.lat!);
-            double long = double.parse(hotel.long!);
-            //set Pref for Hotel
-            if (hotel.id != null) setPref(hotel.id!, hotel.name, hotel.img);
+            double lat = double.parse(hotel.lat);
+            double long = double.parse(hotel.long);
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -181,21 +121,16 @@ class _HotelDetailState extends State<HotelDetail> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Icon(Icons.location_on_sharp),
-                                SizedBox(
-                                    width: 250,
-                                    child: Container(
-                                      child: Text(
-                                        'Address : '
-                                        '${hotel.address} '
-                                        '${hotel.city}',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ))
+                                Text(
+                                  'Address : '
+                                  '${hotel.address}'
+                                  '${hotel.city}',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ],
                             ),
                           ],

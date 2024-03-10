@@ -1,7 +1,6 @@
 import 'package:book_and_rest/pages/model.dart';
 import 'package:book_and_rest/pages/roomdetail.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'database.dart';
 
@@ -38,8 +37,6 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             HotelModel hotel = snapshot.data!;
-            double lat = double.parse(hotel.lat!);
-            double long = double.parse(hotel.long!);
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -108,21 +105,16 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Icon(Icons.location_on_sharp),
-                                SizedBox(
-                                    width: 250,
-                                    child: Container(
-                                      child: Text(
-                                        'Address : '
-                                        '${hotel.address} '
-                                        '${hotel.city}',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ))
+                                Text(
+                                  'Address : '
+                                  '${hotel.address}'
+                                  '${hotel.city}',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ],
                             ),
                           ],
@@ -161,8 +153,10 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                     padding: EdgeInsets.fromLTRB(30, 15, 0, 0),
                     child: Text(
                       'Description',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Padding(
@@ -191,28 +185,19 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(30, 15, 30, 70),
-                    child: Container(
+                    padding: EdgeInsets.fromLTRB(0, 15, 0, 70),
+                    child: Image.network(
+                      //google map img
+                      'https://i.stack.imgur.com/dApg7.png',
+                      width: 300,
                       height: 300,
-                      child: GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(lat, long),
-                          zoom: 15,
-                        ),
-                        markers: Set<Marker>.of([
-                          Marker(
-                            markerId: MarkerId('hotel_location'),
-                            position: LatLng(lat, long),
-                            infoWindow: InfoWindow(title: 'Hotel Location'),
-                          ),
-                        ]),
-                      ),
                     ),
-                  )
+                  ),
                 ],
               ),
             );
           } else {
+            //check data
             return Center(
               child: Text('No data'),
             );
@@ -233,7 +218,6 @@ void roomAmenitiesModalBottomSheet(BuildContext context, int hotelId) {
             AsyncSnapshot<List<FacilitiesHotel?>> snapshot) {
           if (snapshot.hasData) {
             List<FacilitiesHotel?> facilities = snapshot.data!;
-
             // check para has data
             // print('hotelId : ${hotelId}');
             // print('Facilities count: ${facilities.length}');
