@@ -30,6 +30,7 @@ class _SearchHotel extends State<SearchHotel> {
     data = ModalRoute.of(context)?.settings.arguments as List;
     return Scaffold(
       appBar: AppBar(title: Text("Search Hotels")),
+<<<<<<< HEAD
       body: Column(
         children: [
           Row(
@@ -91,6 +92,72 @@ class _SearchHotel extends State<SearchHotel> {
           ),
           _buildFiltered(),
         ],
+=======
+      body: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: 800),
+        child: Wrap(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () async {
+                    result = await Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Filter()));
+                    setState(() {});
+                    print('===Test : $filtered');
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            bottomLeft: Radius.circular(15))),
+                    child: Text(
+                      'Filter',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    _sortFunction();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey),
+// borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Text('Sort by', style: TextStyle(fontSize: 16)),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    nearestFunction();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey),
+// borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(15),
+                          bottomRight: Radius.circular(15)),
+                    ),
+                    child: Text('Nearest', style: TextStyle(fontSize: 16)),
+                  ),
+                ),
+              ],
+            ),
+            _buildFiltered(),
+          ],
+        ),
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
       ),
     );
   }
@@ -246,9 +313,15 @@ class _SearchHotel extends State<SearchHotel> {
           } else if (orderBy == 'farthest') {
             hotels.sort((a, b) => b.displacement!.compareTo(a.displacement!));
           }
+<<<<<<< HEAD
           return Expanded(
             child: ListView.builder(
               // shrinkWrap: true,
+=======
+          return SizedBox(
+            height: 800,
+            child: ListView.builder(
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 HotelAllModel hotel = snapshot.data![index];
@@ -266,7 +339,16 @@ class _SearchHotel extends State<SearchHotel> {
                     child: Row(
                       children: [
                         ClipRRect(
+<<<<<<< HEAD
                           borderRadius: BorderRadius.circular(15),
+=======
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            bottomLeft: Radius.circular(15),
+                            topRight: Radius.circular(15),
+                            bottomRight: Radius.circular(15),
+                          ),
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
                           child: Image.network(
                             '${hotel.img}',
                             width: 150,
@@ -274,7 +356,12 @@ class _SearchHotel extends State<SearchHotel> {
                             fit: BoxFit.cover,
                           ),
                         ),
+<<<<<<< HEAD
                         Expanded(
+=======
+                        Container(
+                            child: Expanded(
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
                           child: Padding(
                             padding: EdgeInsets.all(8),
                             child: Column(
@@ -294,21 +381,36 @@ class _SearchHotel extends State<SearchHotel> {
                                     ),
                                     Text(
                                       '${hotel.displacement!.toString()} km.',
+<<<<<<< HEAD
                                       maxLines: 1,
                                     ),
                                     Spacer(),
+=======
+                                      // hotel.city,
+                                      maxLines: 1,
+                                    ),
+                                    const Spacer(),
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
                                     Icon(
                                       Symbols.star,
                                       color: Colors.yellow,
                                       fill: 1,
                                     ),
                                     Text(hotel.ratings.toString())
+<<<<<<< HEAD
+=======
+                                    // Text("5")
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
                                   ],
                                 ),
                                 Row(
                                   children: [
                                     Text(
                                       '\$${hotel.min_price}',
+<<<<<<< HEAD
+=======
+                                      // '\$80',
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
                                       style: TextStyle(
                                           color: Colors.deepPurple,
                                           fontWeight: FontWeight.bold,
@@ -323,7 +425,11 @@ class _SearchHotel extends State<SearchHotel> {
                               ],
                             ),
                           ),
+<<<<<<< HEAD
                         )
+=======
+                        ))
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
                       ],
                     ),
                   ),

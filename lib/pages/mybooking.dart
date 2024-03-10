@@ -1,9 +1,14 @@
 import 'package:book_and_rest/pages/database.dart';
+<<<<<<< HEAD
 import 'package:book_and_rest/pages/hoteldetail.dart';
 import 'package:book_and_rest/pages/model.dart';
 import 'package:book_and_rest/userPreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+=======
+import 'package:book_and_rest/pages/model.dart';
+import 'package:flutter/material.dart';
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
 
 class MyBooking extends StatefulWidget {
   const MyBooking({super.key});
@@ -14,13 +19,19 @@ class MyBooking extends StatefulWidget {
 
 @override
 class _MyBooking extends State<MyBooking> {
+<<<<<<< HEAD
   // Future<List<BookingDetailModel>>? _futureBookingDetails;
   appDatabase db = appDatabase();
   int? userId;
+=======
+  late Future<List<BookingDetailModel>> _futureBookingDetails;
+  appDatabase db = appDatabase();
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
 
   @override
   void initState() {
     super.initState();
+<<<<<<< HEAD
     // _futureBookingDetails = db.getBookingDetail(userId);
     initializeUserId();
   }
@@ -28,6 +39,9 @@ class _MyBooking extends State<MyBooking> {
   Future<void> initializeUserId() async {
     userId = await UserPreferences.getUserId();
     setState(() {});
+=======
+    _futureBookingDetails = db.getBookingDetail();
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
   }
 
   @override
@@ -36,6 +50,7 @@ class _MyBooking extends State<MyBooking> {
       appBar: AppBar(
         title: Text('My Bookings'),
       ),
+<<<<<<< HEAD
       body: _buildMyBookingDetails(),
     );
   }
@@ -110,16 +125,53 @@ class _MyBooking extends State<MyBooking> {
                         ))
                       ],
                     ),
+=======
+      body: FutureBuilder<List<BookingDetailModel>>(
+        future: _futureBookingDetails,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<BookingDetailModel> bookingDetails = snapshot.data!;
+            return ListView.builder(
+              itemCount: bookingDetails.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Booking ID: ${bookingDetails[index].bookingId}'),
+                      Text('Hotel ID: ${bookingDetails[index].hotelId}'),
+                      Text('Room ID: ${bookingDetails[index].roomId}'),
+                      Text(
+                          'Selected Room Count: ${bookingDetails[index].selectedRoomCount}'),
+                      Text('First Name: ${bookingDetails[index].firstName}'),
+                      Text('Last Name: ${bookingDetails[index].lastName}'),
+                      Text('Email: ${bookingDetails[index].email}'),
+                      Text('Phone: ${bookingDetails[index].phone}'),
+                      Text('CheckInDate: ${bookingDetails[index].checkInDate}'),
+                      Text(
+                          'CheckOutDate: ${bookingDetails[index].checkOutDate}')
+                    ],
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
                   ),
                 );
               },
             );
           } else {
+<<<<<<< HEAD
             return const Center(child: Text('Not booking yet'));
           }
 
           // แสดงตัวโหลดขณะรอข้อมูล
         },
       );
+=======
+            return Center(
+              child: Text('No bookings found.'),
+            );
+          }
+        },
+      ),
+    );
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
   }
 }

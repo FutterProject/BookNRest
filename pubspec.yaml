@@ -50,8 +50,11 @@ dependencies:
   custom_radio_group_list: ^1.1.2
   upi_payment_qrcode_generator: ^1.4.0
   shared_preferences: ^2.2.2
+<<<<<<< HEAD
   http: ^1.2.0
   animated_theme_switcher: ^2.0.1-nullsafety.0
+=======
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
   # geocoding: ^2.1.1
 
 dev_dependencies:
@@ -75,9 +78,12 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+<<<<<<< HEAD
   assets:
     - assets/
 
+=======
+>>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
