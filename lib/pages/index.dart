@@ -15,12 +15,8 @@ class IndexState extends StatefulWidget {
 
 class _IndexState extends State<IndexState> {
   int screenIndex = 0;
-<<<<<<< HEAD
   final menuScreen = [Home(), MyBooking(), MyFavorite(), ProfilePage()];
   // final menuScreen = [Home(), MyBooking(), MyFavorite(), MyProfile()];
-=======
-  final menuScreen = [Home(), MyBooking(), MyFavorite(), MyProfile()];
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
   // final menuScreen = [Home(), ShowMap(), MyFavorite(), MyProfile()];
 
   void onTabTapped(int index) {

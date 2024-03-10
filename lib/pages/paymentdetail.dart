@@ -1,16 +1,10 @@
-<<<<<<< HEAD
 import 'package:book_and_rest/hotelPreferences.dart';
-=======
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
 import 'package:book_and_rest/pages/database.dart';
 import 'package:book_and_rest/pages/home.dart';
 import 'package:book_and_rest/pages/hoteldetailpage.dart';
 import 'package:book_and_rest/pages/index.dart';
 import 'package:book_and_rest/pages/model.dart';
-<<<<<<< HEAD
 import 'package:book_and_rest/userPreferences.dart';
-=======
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,13 +44,10 @@ class _PaymentDetailState extends State<PaymentDetail> {
   int selectedPaymentMethod = 0;
   late List<int> selectedRoomCounts;
   bool isVisible = false;
-<<<<<<< HEAD
   int? userId;
   int? hotelId;
   String? hotelName;
   String? hotelImg;
-=======
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
   final upiDetails =
       UPIDetails(upiID: "UPI ID", payeeName: "Payee Name", amount: 1);
 
@@ -74,7 +65,6 @@ class _PaymentDetailState extends State<PaymentDetail> {
     selectedRoomCount = widget.selectedRoomCount;
     _futureHotel = db.getHotelDetailById(widget.hotelId);
     _futureRooms = db.getRoomDetailById(widget.hotelId);
-<<<<<<< HEAD
     initializePref();
   }
 
@@ -85,8 +75,6 @@ class _PaymentDetailState extends State<PaymentDetail> {
     hotelImg = await HotelPreferences.getHotelImg();
 
     setState(() {});
-=======
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
   }
 
   @override
@@ -232,7 +220,6 @@ class _PaymentDetailState extends State<PaymentDetail> {
                               Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(20, 15, 0, 0),
-<<<<<<< HEAD
                                 child: SizedBox(
                                   width: 250,
                                   child: Text(
@@ -242,21 +229,12 @@ class _PaymentDetailState extends State<PaymentDetail> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-=======
-                                child: Text(
-                                  '${widget.selectedRoomCount} x ${widget.room.type}',
-                                  style: TextStyle(fontSize: 25),
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                                 child: Text(
-<<<<<<< HEAD
                                   'room price : ${selectedRoom.price}',
-=======
-                                  'room price : ${widget.room.price}',
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
                                   style: TextStyle(fontSize: 13),
                                 ),
                               ),
@@ -264,13 +242,8 @@ class _PaymentDetailState extends State<PaymentDetail> {
                                 padding:
                                     const EdgeInsets.fromLTRB(20, 15, 0, 0),
                                 child: Text(
-<<<<<<< HEAD
                                   'Max ${selectedRoom.adult} adults' +
                                       ' | Max ${selectedRoom.child} child' +
-=======
-                                  'Max ${widget.room.adult} adults' +
-                                      ' | Max ${widget.room.child} child' +
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
                                       ' (0-11 years)',
                                   style: TextStyle(fontSize: 13),
                                 ),
@@ -441,7 +414,6 @@ class _PaymentDetailState extends State<PaymentDetail> {
           height: 40,
           child: FittedBox(
             child: FloatingActionButton.extended(
-<<<<<<< HEAD
               onPressed: selectedPaymentMethod == 2
                   ? () async {
                       Navigator.of(context).popUntil((route) => route.isFirst);
@@ -466,28 +438,6 @@ class _PaymentDetailState extends State<PaymentDetail> {
                       await db.InsertBookingDetail(bookingDetailModel);
                     }
                   : null,
-=======
-              onPressed: () async {
-                Navigator.of(context).popUntil((route) => route.isFirst);
-
-                final SharedPreferences prefs =
-                    await SharedPreferences.getInstance();
-                final String? cid = prefs.getString('checkindate');
-                final String? cod = prefs.getString('checkoutdate');
-                BookingDetailModel bookingDetailModel = BookingDetailModel(
-                  hotelId: widget.hotelId,
-                  roomId: widget.roomId,
-                  selectedRoomCount: widget.selectedRoomCount,
-                  firstName: widget.firstName,
-                  lastName: widget.lastName,
-                  email: widget.email,
-                  phone: widget.phone,
-                  checkInDate: cid,
-                  checkOutDate: cod,
-                );
-                await db.InsertBookingDetail(bookingDetailModel);
-              },
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
               label: Text(
                 'BOOK NOW',
                 style: TextStyle(color: Colors.white, fontSize: 17),

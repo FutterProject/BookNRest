@@ -1,14 +1,9 @@
 import 'dart:async';
 
-<<<<<<< HEAD
 import 'package:book_and_rest/hotelPreferences.dart';
 import 'package:book_and_rest/pages/model.dart';
 import 'package:book_and_rest/pages/roomdetail.dart';
 import 'package:book_and_rest/userPreferences.dart';
-=======
-import 'package:book_and_rest/pages/model.dart';
-import 'package:book_and_rest/pages/roomdetail.dart';
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -27,21 +22,16 @@ class _HotelDetailState extends State<HotelDetail> {
   // Completer<GoogleMapController> _controller = Completer();
   appDatabase db = appDatabase();
   late Future<HotelModel?> _futureHotel;
-<<<<<<< HEAD
   bool? isFavorited;
   int? userId;
   int? hotelId;
   String? hotelName;
   String? hotelImg;
-=======
-  bool _fav = false;
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
   @override
   void initState() {
     super.initState();
     _futureHotel = db.getHotelDetailById(widget.hotelId);
     print("Hotel ID: ${widget.hotelId}");
-<<<<<<< HEAD
     // hotelId = widget.hotelId;
     // hotelImg = widget
     initializeUserId();
@@ -74,8 +64,6 @@ class _HotelDetailState extends State<HotelDetail> {
     } else {
       await db.addFavHotels(dataModel);
     }
-=======
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
   }
 
   @override
@@ -84,7 +72,6 @@ class _HotelDetailState extends State<HotelDetail> {
       extendBody: true,
       appBar: AppBar(
         actions: [
-<<<<<<< HEAD
           if (userId != null)
             FutureBuilder<bool>(
               future: checkFavorite(userId!, widget.hotelId),
@@ -113,16 +100,6 @@ class _HotelDetailState extends State<HotelDetail> {
                 }
               },
             ),
-=======
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _fav = !_fav;
-              });
-            },
-            icon: new Icon(_fav ? Icons.favorite : Icons.favorite_border),
-          )
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
         ],
         title: Text('Hotel Detail'),
         shadowColor: Colors.black,
@@ -132,15 +109,10 @@ class _HotelDetailState extends State<HotelDetail> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             HotelModel hotel = snapshot.data!;
-<<<<<<< HEAD
             double lat = double.parse(hotel.lat!);
             double long = double.parse(hotel.long!);
             //set Pref for Hotel
             if (hotel.id != null) setPref(hotel.id!, hotel.name, hotel.img);
-=======
-            double lat = double.parse(hotel.lat);
-            double long = double.parse(hotel.long);
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -209,7 +181,6 @@ class _HotelDetailState extends State<HotelDetail> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-<<<<<<< HEAD
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Icon(Icons.location_on_sharp),
@@ -225,18 +196,6 @@ class _HotelDetailState extends State<HotelDetail> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ))
-=======
-                              children: [
-                                Icon(Icons.location_on_sharp),
-                                Text(
-                                  'Address : '
-                                  '${hotel.address}'
-                                  '${hotel.city}',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
                               ],
                             ),
                           ],

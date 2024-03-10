@@ -46,7 +46,6 @@ class appDatabase {
   ''');
       await db.execute('''
     CREATE TABLE Users (
-<<<<<<< HEAD
       userId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       userName TEXT,
       userEmail TEXT,
@@ -66,18 +65,6 @@ class appDatabase {
       booking_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       room_id INTEGER,
       userId INTEGER,
-=======
-      user_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-      name TEXT,
-      email TEXT
-    )
-  ''');
-      await db.execute('''
-    CREATE TABLE Bookings (
-      booking_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-      room_id INTEGER,
-      user_id INTEGER,
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
       checkin_date DATE,
       checkout_date DATE,
       first_name TEXT, 
@@ -85,11 +72,7 @@ class appDatabase {
       email TEXT, 
       phone_number TEXT,
       FOREIGN KEY (room_id) REFERENCES Rooms(room_id),
-<<<<<<< HEAD
       FOREIGN KEY (userId) REFERENCES Users(userId)
-=======
-      FOREIGN KEY (user_id) REFERENCES Users(user_id)
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
     )
   ''');
       await db.execute('''
@@ -118,7 +101,6 @@ class appDatabase {
             email TEXT, 
             phone TEXT,
             checkInDate DATE,
-<<<<<<< HEAD
             checkOutDate DATE,
             userId INT
             )
@@ -200,40 +182,10 @@ class appDatabase {
   ''');
       await db.rawInsert('''
     INSERT INTO Bookings (booking_id, room_id, userId, checkin_date, checkout_date ,first_name , last_name ,email , phone_number)
-=======
-            checkOutDate DATE
-            )
-            ''');
-      print(
-          'wowowowowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwooooooooooooooooooooooooooo');
-      // เพิ่มข้อมูลลงในตาราง
-      await db.rawInsert('''
-    INSERT INTO Hotels (hotel_id, name, address, city, ratings , img, lat, long, displacement,lowest , hotel_description)
-    VALUES (1, 'Hotel A', '123 Main St.', 'bangkok' , '4.2', 'https://pix8.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=450x450', '13.113493', '100.922488', 1 ,NULL ,"The Jianguo Hotel Qianmen is located near Tiantan Park, just a 10-minute walk from the National Center for the Performing Arts and Tian'anmen Square. Built in 1956 it has old school charm and many rooms still feature high, crown-molded ceilings. A 2012 renovation brought all rooms and services up to modern day scratch and guestrooms come equipped with free Wi-Fi and all the usual amenities required for a comfortable stay."),
-           (2, 'Hotel B', '456 Elm St.', 'chon buri', '4.5', 'https://pix8.agoda.net/hotelImages/2011272/-1/826c738efa75af641b8ff780c1ac62bc.jpg?ce=0&s=450x450', '13.11476', '100.92624', 1,NULL,"Kai Heng Century Hotel offers ultimate comfort and luxury. This 4-storied hotel is a beautiful combination of traditional grandeur and modern facilities. The 255 exclusive guest rooms are furnished with a range of modern amenities such as television and internet access. International direct-dial phone and safe are also available in any of these rooms. Wake-up call facility is also available in these rooms."),
-           (3, 'Hotel C', '789 Elm St.', 'surin', '4.7', 'https://pix8.agoda.net/hotelImages/10859/-1/107b911e9ca63bb87d2747df2b6ad8bd.jpg?ca=14&ce=1&s=450x450', '13.116296', '100.914315', 1,NULL,"Monteverde Country Lodge is a quiet, comfortable hotel located near the Ecological Sanctuary and the Monteverde Butterfly Gardens in an area called Cerro Plano, an ideal location half way between the Monteverde Cloud Forest reserve and the main village of the Monteverde area (Santa Elena), in close proximity to several restaurants and activities. All rooms have private bathrooms with hot water."),
-           (4, 'Centara Life Maris Resort', '94 najomtian R.', 'bangkok', '4.8', 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/14/a2/13/swimming-pool-3.jpg?w=300&h=300&s=1', '13.12430', '100.91681', 1 ,NULL,"Ibis London Wembley hotel is in close proximity to Wembley Stadium and Wembley Arena, both just a few minutes walk from the hotel. Each of the 210 modern guest rooms have wireless internet and satellite TV. The hotel has excellent local transport connections into central London."),
-           (5, 'Avani Pattaya Resort', '21/8 Liebchayhad R. ', 'bangkok', '4.9', 'https://pix8.agoda.net/hotelImages/10859/-1/107b911e9ca63bb87d2747df2b6ad8bd.jpg?ca=14&ce=1&s=450x450', '13.10594', '100.91458', 1 , NULL ,"Only 20 minutes by tube from London's bustling West End, Ibis London Earls Court puts you close to plenty of prominent nearby attractions including the Olympia Conference Centre, Hyde Park, Knightsbridge and Kensington's thriving high street and business district. Inviting, modern and cozy, with a comfortable bed and a functional bathroom, everything you need for a pleasant stay.")
-  ''');
-      await db.rawInsert('''
-    INSERT INTO Rooms (room_id, room_number, type, price, hotel_id , room_img , adult , child , room_description)
-    VALUES (101, '101', 'Single', 79.00, 1 , 'https://images.pexels.com/photos/164595/pexels-photo-164595.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' , 2 , 1 , 'Our king size four poster provides views over landscaped gardens. It has a seating area, ample storage, digital safe and mini fridge.'),
-           (102, '102', 'Double', 89.00, 1 , 'https://images.pexels.com/photos/262048/pexels-photo-262048.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 2 , 1 , 'Our king size sleigh bedded also provides views over landscaped gardens. It has ample storage, a seating area, digital safe and mini fridge.'),
-           (201, '201', 'Suite', 20.00, 2 , 'https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' , 2 , 1 , 'Our Deluxe king size room has a seating area, ample storage, digital safe and mini fridge. This room can also be configured with an extra roll-away bed for families of 3.'),
-           (202, '202', 'Deluxe', 49.00, 2 , 'https://images.pexels.com/photos/210265/pexels-photo-210265.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 2 , 1 , 'Our Deluxe Twin/Large Double also provides views over landscaped gardens. It has a seating area, digital safe and mini fridge. This room can be configured with either 2 single beds or zip and linked to provide a large double bed.'),
-           (301, '301', 'Single', 50.00, 3 , 'https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' , 2 , 1 , 'As our smallest budget rooms, the Compact bedrooms are suited for single occupancy or short-stay double occupancy as they have limited space and storage.'),
-           (302, '302', 'Deluxe', 60.00, 3 , 'https://images.pexels.com/photos/271643/pexels-photo-271643.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' , 2 , 1 , 'Our king size four poster provides views over landscaped gardens. It has a seating area, ample storage, digital safe and mini fridge.'),
-           (401, '401', 'Single', 79.00, 4 , 'https://images.pexels.com/photos/210604/pexels-photo-210604.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' , 2 , 1 ,'Our Deluxe king size room has a seating area, ample storage, digital safe and mini fridge. This room can also be configured with an extra roll-away bed for families of 3.'),
-           (501, '501', 'Deluxe', 99.00, 5 , 'https://images.pexels.com/photos/279746/pexels-photo-279746.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' , 2 , 1 ,'Our king size four poster provides views over landscaped gardens. It has a seating area, ample storage, digital safe and mini fridge.')
-  ''');
-      await db.rawInsert('''
-    INSERT INTO Bookings (booking_id, room_id, user_id, checkin_date, checkout_date ,first_name , last_name ,email , phone_number)
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
     VALUES (1, 101, 1001, '2024-02-01', '2024-02-03', 'perapon' , 'kaewtaweesap' , 'perapon.ka@ku.th' , '0646097891'),
            (2, 201, 1002, '2024-02-05', '2024-02-08',' chick', 'ken' , 'kfckfc@kfc.com' ,'012345678'),
            (3, 301, 1002, '2024-02-10', '2024-02-12','mobile' ,'app' ,'abc@abc.com' ,'0132154')
   ''');
-<<<<<<< HEAD
 
       await db.rawInsert('''
     INSERT INTO Users (userId, userName, userEmail, userPass, address, role)
@@ -247,14 +199,6 @@ class appDatabase {
       (2,'Hotel')
     ''');
       await db.rawInsert('''
-=======
-      await db.rawInsert('''
-    INSERT INTO Users (user_id, name, email)
-    VALUES (1001, 'John', 'john@example.com'),
-           (1002, 'Alice', 'alice@example.com')
-  ''');
-      await db.rawInsert('''
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
     INSERT INTO Facilities (facilities_id, facilities_name) 
     VALUES (1, 'ห้องน้ำ'),
             (2, 'แอร์'),
@@ -264,7 +208,6 @@ class appDatabase {
   ''');
       await db.rawInsert('''
     INSERT INTO HotelFacilities (hotel_id, facilities_id)
-<<<<<<< HEAD
     VALUES (1, 1),(1, 2),(1, 3),(1, 4),(1, 5),
           (2, 1),(2, 2),(2, 3),
           (3, 1),(3, 2),(3, 3),(3, 4),
@@ -291,16 +234,6 @@ class appDatabase {
       VALUES (1001, 4),
             (1002, 5)
     ''');
-=======
-    VALUES (1, 1),
-          (1, 2),
-          (2, 1),
-          (3, 3),
-          (4, 1),
-          (4, 2),
-          (5, 1)
-  ''');
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
     }));
     return database;
   }
@@ -655,7 +588,6 @@ class appDatabase {
     await db.insert('bookingdetail', bookingDetailModel.toMap());
   }
 
-<<<<<<< HEAD
   Future<List<BookingDetailModel>> getBookingDetail(int userId) async {
     var db = await initializedb();
     final List<Map<String, dynamic>> maps = await db.rawQuery('''
@@ -664,19 +596,11 @@ class appDatabase {
     JOIN Hotels ON BookingDetail.hotelId = Hotels.hotel_id
     WHERE userId = ?
   ''', [userId]);
-=======
-  Future<List<BookingDetailModel>> getBookingDetail() async {
-    var db = await initializedb();
-    final List<Map<String, dynamic>> maps = await db.rawQuery('''
-    SELECT * FROM BookingDetail
-  ''');
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
     // แปลง List<Map<String, dynamic>> เป็น List<Hotel>
     return List.generate(maps.length, (i) {
       return BookingDetailModel.fromMap(maps[i]);
     });
   }
-<<<<<<< HEAD
 
   Future<List<HotelModel>> getFavoriteHotel(int userId) async {
     var db = await initializedb();
@@ -775,8 +699,3 @@ class appDatabase {
     );
   }
 }
-=======
-}
-
-
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc

@@ -6,17 +6,10 @@ class HotelModel {
   final String img;
   final int? countFacility;
   final double? lowest;
-<<<<<<< HEAD
   final String? hotelDescription;
   final double ratings;
   final String? lat;
   final String? long;
-=======
-  final String hotelDescription;
-  final double ratings;
-  final String lat;
-  final String long;
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
   HotelModel(
       {this.id,
       required this.name,
@@ -24,19 +17,11 @@ class HotelModel {
       required this.city,
       required this.img,
       this.countFacility,
-<<<<<<< HEAD
       this.lowest,
       this.hotelDescription,
       required this.ratings,
       this.lat,
       this.long});
-=======
-      required this.lowest,
-      required this.hotelDescription,
-      required this.ratings,
-      required this.lat,
-      required this.long});
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
   HotelModel.fromMap(Map<String, dynamic> item)
       : id = item['id'],
         name = item['name'],
@@ -228,7 +213,6 @@ class FacilitiesHotel {
   }
 }
 
-<<<<<<< HEAD
 // class UserModel {
 //   String? id;
 //   String? email;
@@ -288,34 +272,6 @@ class UsersModel {
         "address": address,
         "role": role
       };
-=======
-class UserModel {
-  String? id;
-  String? email;
-  String? lat;
-  String? long;
-
-  UserModel({
-    this.id,
-    this.email,
-    this.lat,
-    this.long,
-  });
-  UserModel.fromMap(Map<String, dynamic> item)
-      : id = item['id'],
-        email = item['email'],
-        lat = item['lat'],
-        long = item['long'];
-
-  Map<String, Object?> toMap() {
-    return {
-      'id': id,
-      'email': email,
-      'lat': lat,
-      'long': long,
-    };
-  }
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
 }
 
 class HotelAllModel {
@@ -381,7 +337,6 @@ class BookingDetailModel {
   final String phone;
   final String? checkInDate;
   final String? checkOutDate;
-<<<<<<< HEAD
   final int? userId;
   final String? hotelName;
   final String? hotelImg;
@@ -400,19 +355,6 @@ class BookingDetailModel {
     this.hotelName,
     this.hotelImg,
   });
-=======
-  BookingDetailModel(
-      {this.bookingId,
-      required this.hotelId,
-      required this.roomId,
-      required this.selectedRoomCount,
-      required this.firstName,
-      required this.lastName,
-      required this.email,
-      required this.phone,
-      required this.checkInDate,
-      required this.checkOutDate});
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
 
   BookingDetailModel.fromMap(Map<String, dynamic> item)
       : bookingId = item['bookingId'],
@@ -424,14 +366,10 @@ class BookingDetailModel {
         email = item['email'],
         phone = item['phone'],
         checkInDate = item['checkInDate'],
-<<<<<<< HEAD
         checkOutDate = item['checkOutDate'],
         userId = item['userId'],
         hotelName = item['name'],
         hotelImg = item['img'];
-=======
-        checkOutDate = item['checkOutDate'];
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
 
   Map<String, dynamic> toMap() {
     return {
@@ -445,7 +383,6 @@ class BookingDetailModel {
       'phone': phone,
       'checkInDate': checkInDate,
       'checkOutDate': checkOutDate,
-<<<<<<< HEAD
       'userId': userId,
       // 'name': hotelName,
       // 'img': hotelImg,
@@ -466,8 +403,6 @@ class FavoriteHotel {
     return {
       'userId': userId,
       'hotel_id': hotelId,
-=======
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
     };
   }
 }

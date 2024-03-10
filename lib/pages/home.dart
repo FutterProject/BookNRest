@@ -27,11 +27,7 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
-<<<<<<< HEAD
   // UserModel? userModel;
-=======
-  UserModel? userModel;
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
   DateTimeRange? rangeDateTime;
   final DateTime now = DateTime.now();
   late DateTime rangeDateTimeStart; // วันที่ปัจจุบัน
@@ -54,7 +50,6 @@ class _Home extends State<Home> {
     rangeDateTimeEnd = now.add(const Duration(days: 1)); // วันถัดไป
     rangeDateTime =
         DateTimeRange(start: rangeDateTimeStart, end: rangeDateTimeEnd);
-<<<<<<< HEAD
     findLocation();
     initCheckinCheckOut();
   }
@@ -66,10 +61,6 @@ class _Home extends State<Home> {
     await prefs.setString(
         'checkoutdate', rangeDateTime!.end.toString().substring(0, 10));
     setState(() {});
-=======
-    // userModel = widget.userModel;
-    findLocation();
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
   }
 
   @override
@@ -159,7 +150,6 @@ class _Home extends State<Home> {
                             if (result != null) {
                               if (result is DateTimeRange) {
                                 rangeDateTime = result;
-<<<<<<< HEAD
                                 final SharedPreferences prefs =
                                     await SharedPreferences.getInstance();
                                 await prefs.setString(
@@ -172,8 +162,6 @@ class _Home extends State<Home> {
                                     rangeDateTime!.end
                                         .toString()
                                         .substring(0, 10));
-=======
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
                                 setState(() {});
                               }
                             }
@@ -199,7 +187,6 @@ class _Home extends State<Home> {
                       ),
                       const SizedBox(width: 10),
                       ElevatedButton(
-<<<<<<< HEAD
                         onPressed: () {
                           // final SharedPreferences prefs =
                           //     await SharedPreferences.getInstance();
@@ -207,15 +194,6 @@ class _Home extends State<Home> {
                           //     rangeDateTime!.start.toString().substring(0, 10));
                           // await prefs.setString('checkoutdate',
                           //     rangeDateTime!.end.toString().substring(0, 10));
-=======
-                        onPressed: () async {
-                          final SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          await prefs.setString('checkindate',
-                              rangeDateTime!.start.toString().substring(0, 10));
-                          await prefs.setString('checkoutdate',
-                              rangeDateTime!.end.toString().substring(0, 10));
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
 
                           if (formKey.currentState!.validate() &&
                               rangeDateTime != null &&
@@ -300,7 +278,6 @@ class _Home extends State<Home> {
     );
   }
 
-<<<<<<< HEAD
   Future findLocation() async {
     LocationData? locationData = await findLocationData();
     if (locationData != null) {
@@ -349,52 +326,6 @@ class _Home extends State<Home> {
           },
         );
       }
-=======
-  Future<Null> findLocation() async {
-    LocationData? locationData = await findLocationData();
-    if (locationData != null) {
-      setState(() {
-        myLat = locationData.latitude!;
-        myLong = locationData.longitude!;
-        hotelLat = 13.118685137188292;
-        hotelLong = 100.92146253209525;
-        // hotelLat = double.parse(userModel.lat);
-        // hotelLong = double.parse(userModel!.long);
-
-        print(
-            'myLat : $myLat | myLong : $myLong ==== hotelLat : $hotelLat | hotelLong : $hotelLong');
-        distance = calculateDistance(myLat!, myLong!, hotelLat!, hotelLong!);
-        var myFormat = NumberFormat('#0.0#', 'en_US');
-        distanceString = myFormat.format(distance);
-        print('Distance from me to hotel : $distance => $distanceString');
-      });
-    } else {
-      setState(
-        () {
-          //set default at Victory Monument
-          myLat = 13.764943059692726;
-          myLong = 100.53828945433192;
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Location Access Denied'),
-                content:
-                    Text('Please enable location access to use this feature.'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
-        },
-      );
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
     }
   }
 
@@ -451,21 +382,12 @@ class _Home extends State<Home> {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () async {
-<<<<<<< HEAD
                           // final SharedPreferences prefs =
                           //     await SharedPreferences.getInstance();
                           // await prefs.setString('checkindate',
                           //     rangeDateTime!.start.toString().substring(0, 10));
                           // await prefs.setString('checkoutdate',
                           //     rangeDateTime!.end.toString().substring(0, 10));
-=======
-                          final SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          await prefs.setString('checkindate',
-                              rangeDateTime!.start.toString().substring(0, 10));
-                          await prefs.setString('checkoutdate',
-                              rangeDateTime!.end.toString().substring(0, 10));
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -718,21 +640,12 @@ class _Home extends State<Home> {
                 return Card(
                     child: GestureDetector(
                         onTap: () async {
-<<<<<<< HEAD
                           // final SharedPreferences prefs =
                           //     await SharedPreferences.getInstance();
                           // await prefs.setString('checkindate',
                           //     rangeDateTime!.start.toString().substring(0, 10));
                           // await prefs.setString('checkoutdate',
                           //     rangeDateTime!.end.toString().substring(0, 10));
-=======
-                          final SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          await prefs.setString('checkindate',
-                              rangeDateTime!.start.toString().substring(0, 10));
-                          await prefs.setString('checkoutdate',
-                              rangeDateTime!.end.toString().substring(0, 10));
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
                           Navigator.push(
                             context,
                             MaterialPageRoute(

@@ -1,12 +1,8 @@
-<<<<<<< HEAD
 import 'package:book_and_rest/pages/database.dart';
 import 'package:book_and_rest/pages/model.dart';
 import 'package:book_and_rest/userPreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
-=======
-import 'package:flutter/material.dart';
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
 
 class MyFavorite extends StatefulWidget {
   const MyFavorite({super.key});
@@ -15,7 +11,6 @@ class MyFavorite extends StatefulWidget {
   State<MyFavorite> createState() => _MyFavorite();
 }
 
-<<<<<<< HEAD
 appDatabase db = appDatabase();
 
 class _MyFavorite extends State<MyFavorite> {
@@ -129,11 +124,5 @@ class _MyFavorite extends State<MyFavorite> {
         },
       );
     }
-=======
-class _MyFavorite extends State<MyFavorite> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold();
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
   }
 }

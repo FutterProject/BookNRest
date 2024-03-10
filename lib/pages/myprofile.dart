@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:book_and_rest/pages/database.dart';
 import 'package:book_and_rest/pages/loginPage.dart';
@@ -144,20 +143,4 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       );
-=======
-import 'package:flutter/material.dart';
-
-class MyProfile extends StatefulWidget {
-  const MyProfile({super.key});
-
-  @override
-  State<MyProfile> createState() => _MyProfile();
-}
-
-class _MyProfile extends State<MyProfile> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold();
-  }
->>>>>>> 40d05ae19bb53479ca4d28c736cf1a1dded2bcdc
 }
