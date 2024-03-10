@@ -1,0 +1,17 @@
+name: custom_calender_picker2
+description: This package is a customizable calender_picker and add new Future minDate maxDate.
+version: 0.1.1
+
+environment:
+  sdk: ">=3.0.3 <4.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  intl: ^0.18.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
