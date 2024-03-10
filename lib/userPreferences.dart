@@ -34,13 +34,13 @@ class UserPreferences {
     await pref.setString("user-email", userEmail);
   }
 
-  // static Future<String?> getLatLng() async {
-  //   SharedPreferences pref = await SharedPreferences.getInstance();
-  //   return pref.getString("userLatLng");
-  // }
+  static Future<String?> getLatLng() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getString("userLatLng");
+  }
 
-  // static Future setLatLng(double Lat, double Lng) async {
-  //   SharedPreferences pref = await SharedPreferences.getInstance();
-  //   await pref.setString("userLatLng", LatLng(Lat, Lng));
-  // }
+  static Future setLatLng(double Lat, double Lng) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString("userLatLng", '$Lat,$Lng');
+  }
 }

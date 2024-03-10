@@ -1,5 +1,8 @@
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:book_and_rest/pages/database.dart';
+import 'package:book_and_rest/pages/hotel/indexHotel.dart';
+import 'package:book_and_rest/pages/hotel/regisCusPage.dart';
+import 'package:book_and_rest/pages/hotel/regisHotelPage.dart';
 import 'package:book_and_rest/pages/model.dart';
 import 'package:book_and_rest/userPreferences.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +50,7 @@ class _loginState extends State<login> {
         } else {
           print("Admin : ${data.usrName}");
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => IndexState()));
+              context, MaterialPageRoute(builder: (context) => hotelState()));
         }
       });
     } else {
@@ -214,8 +217,8 @@ class _loginState extends State<login> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => regisCusPage()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => regisCusPage()));
                 },
                 child: Text(
                   'Register',

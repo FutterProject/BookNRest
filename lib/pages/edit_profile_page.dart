@@ -6,11 +6,8 @@ import 'package:book_and_rest/pages/model.dart';
 import 'package:book_and_rest/userPreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:book_and_rest/pages/model/user.dart';
-import 'package:book_and_rest/pages/utils/user_preferences.dart';
 import 'package:book_and_rest/pages/widget/button_widget.dart';
 import 'package:book_and_rest/pages/widget/profile_widget.dart';
-import 'package:book_and_rest/pages/widget/textfield_widget.dart';
 
 class EditProfilePage extends StatefulWidget {
   @override

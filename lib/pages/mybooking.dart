@@ -1,5 +1,6 @@
 import 'package:book_and_rest/pages/database.dart';
 import 'package:book_and_rest/pages/hoteldetail.dart';
+import 'package:book_and_rest/pages/hoteldetailpage.dart';
 import 'package:book_and_rest/pages/model.dart';
 import 'package:book_and_rest/userPreferences.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class _MyBooking extends State<MyBooking> {
 
   _buildMyBookingDetails() {
     print("buildNearest working....");
-    if (userId != null)
+    if (userId != null) {
       return FutureBuilder<List<BookingDetailModel>>(
         future: db.getBookingDetail(userId!),
         // future: _futureBookingDetails,
@@ -57,7 +58,7 @@ class _MyBooking extends State<MyBooking> {
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             return ListView.builder(
               shrinkWrap: true,
-              itemCount: snapshot.data!.length < 3 ? snapshot.data!.length : 3,
+              itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 BookingDetailModel hotel = snapshot.data![index];
                 return Card(
@@ -66,7 +67,7 @@ class _MyBooking extends State<MyBooking> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => HotelDetail(
+                            builder: (context) => HotelDetailPage(
                                   hotelId: hotel.hotelId,
                                 )),
                       );
@@ -83,7 +84,7 @@ class _MyBooking extends State<MyBooking> {
                           child: Image.network(
                             '${hotel.hotelImg}',
                             width: 150,
-                            height: 130,
+                            height: 200,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -99,6 +100,15 @@ class _MyBooking extends State<MyBooking> {
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
+                                ),
+                                Text(
+                                  'Room Type : ${hotel.roomType}',
+                                ),
+                                Text(
+                                  'Room Number : ${hotel.roomId}',
+                                ),
+                                Text(
+                                  'Number of Room : ${hotel.selectedRoomCount}',
                                 ),
                                 Text(
                                   'check-in : ${hotel.checkInDate}',
@@ -121,5 +131,6 @@ class _MyBooking extends State<MyBooking> {
           // แสดงตัวโหลดขณะรอข้อมูล
         },
       );
+    }
   }
 }

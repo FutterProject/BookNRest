@@ -340,6 +340,7 @@ class BookingDetailModel {
   final int? userId;
   final String? hotelName;
   final String? hotelImg;
+  final String? roomType;
   BookingDetailModel({
     this.bookingId,
     required this.hotelId,
@@ -354,6 +355,7 @@ class BookingDetailModel {
     this.userId,
     this.hotelName,
     this.hotelImg,
+    this.roomType,
   });
 
   BookingDetailModel.fromMap(Map<String, dynamic> item)
@@ -369,7 +371,8 @@ class BookingDetailModel {
         checkOutDate = item['checkOutDate'],
         userId = item['userId'],
         hotelName = item['name'],
-        hotelImg = item['img'];
+        hotelImg = item['img'],
+        roomType = item['type'];
 
   Map<String, dynamic> toMap() {
     return {

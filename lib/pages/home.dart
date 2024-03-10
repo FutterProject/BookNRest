@@ -6,6 +6,7 @@ import 'package:book_and_rest/pages/hoteldetail.dart';
 import 'package:book_and_rest/pages/index.dart';
 import 'package:book_and_rest/pages/model.dart';
 import 'package:book_and_rest/pages/searchHotel.dart';
+import 'package:book_and_rest/userPreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -278,6 +279,10 @@ class _Home extends State<Home> {
     );
   }
 
+  Future<void> setUsetLocation() async {
+    await UserPreferences.setLatLng(myLat!, myLong!);
+  }
+
   Future findLocation() async {
     LocationData? locationData = await findLocationData();
     if (locationData != null) {
@@ -287,6 +292,7 @@ class _Home extends State<Home> {
           myLong = locationData.longitude!;
           hotelLat = 13.118685137188292;
           hotelLong = 100.92146253209525;
+          setUsetLocation();
           // hotelLat = double.parse(userModel.lat);
           // hotelLong = double.parse(userModel!.long);
 
@@ -406,22 +412,6 @@ class _Home extends State<Home> {
                           ),
                         ),
                       ),
-                      // Align(
-                      //   alignment: Alignment.bottomLeft,
-                      //   child: Padding(
-                      //     padding: EdgeInsets.all(10),
-                      //     child: Text(
-                      //       '${hotel.name}',
-                      //       style: TextStyle(
-                      //         color: Colors.white,
-                      //         fontSize: 20,
-                      //         fontWeight: FontWeight.bold,
-                      //         backgroundColor: Colors.black
-                      //             .withOpacity(0.6),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                       Positioned(
                         bottom: 10,
                         left: 12,
@@ -487,114 +477,6 @@ class _Home extends State<Home> {
       },
     );
   }
-  // Widget _buildPopularHotels() {
-  //   return FutureBuilder<List<HotelModel>>(
-  //     future: db.getAllData(),
-  //     builder: (context, snapshot) {
-  //       if (snapshot.hasData) {
-
-  //         return SizedBox(
-  //           height: 200,
-  //           child: ListView.builder(
-  //             shrinkWrap: true,
-  //             scrollDirection: Axis.horizontal,
-  //             itemCount: snapshot.data!.length,
-  //             itemBuilder: (context, index) {
-  //               HotelModel hotel = snapshot.data![index];
-  //               return Padding(
-  //                 padding: const EdgeInsets.only(right: 10),
-  //                 child: Stack(
-  //                   children: <Widget>[
-  //                     ClipRRect(
-  //                       borderRadius: BorderRadius.circular(15),
-  //                       child: Image.network(
-  //                         '${hotel.img}',
-  //                         height: double.infinity,
-  //                         width: 220,
-  //                         fit: BoxFit.cover,
-  //                       ),
-  //                     ),
-  //                     // Align(
-  //                     //   alignment: Alignment.bottomLeft,
-  //                     //   child: Padding(
-  //                     //     padding: EdgeInsets.all(10),
-  //                     //     child: Text(
-  //                     //       '${hotel.name}',
-  //                     //       style: TextStyle(
-  //                     //         color: Colors.white,
-  //                     //         fontSize: 20,
-  //                     //         fontWeight: FontWeight.bold,
-  //                     //         backgroundColor: Colors.black
-  //                     //             .withOpacity(0.6),
-  //                     //       ),
-  //                     //     ),
-  //                     //   ),
-  //                     // ),
-  //                     Positioned(
-  //                       bottom: 10,
-  //                       left: 12,
-  //                       child: Column(
-  //                         crossAxisAlignment: CrossAxisAlignment.start,
-  //                         children: <Widget>[
-  //                           Text(
-  //                             '${hotel.name}',
-  //                             style: TextStyle(
-  //                               color: Colors.white,
-  //                               fontSize: 20,
-  //                               fontWeight: FontWeight.bold,
-  //                               shadows: <Shadow>[
-  //                                 Shadow(
-  //                                   offset: Offset(1.0, 1.0),
-  //                                   blurRadius: 3.0,
-  //                                   color: Color.fromARGB(255, 0, 0, 0),
-  //                                 ),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                           Row(
-  //                             children: [
-  //                               Icon(
-  //                                 Symbols.location_on,
-  //                                 color: Colors.white,
-  //                                 weight: 700,
-  //                               ),
-  //                               SizedBox(
-  //                                 width: 5,
-  //                               ),
-  //                               Text(
-  //                                 '${hotel.city}',
-  //                                 style: TextStyle(
-  //                                   color: Colors.white,
-  //                                   fontSize: 16,
-  //                                   fontWeight: FontWeight.bold,
-  //                                   shadows: <Shadow>[
-  //                                     Shadow(
-  //                                       offset: Offset(1.0, 1.0),
-  //                                       blurRadius: 3.0,
-  //                                       color: Color.fromARGB(255, 0, 0, 0),
-  //                                     ),
-  //                                   ],
-  //                                 ),
-  //                               ),
-  //                             ],
-  //                           ),
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               );
-  //             },
-  //           ),
-  //         );
-  //       } else if (snapshot.hasError) {
-  //         return Text('Error: ${snapshot.error}');
-  //       } else {
-  //         return Text("NoData");
-  //       }
-  //     },
-  //   );
-  // }
 
   Widget _buildNearest() {
     print("buildNearest working....");
@@ -732,8 +614,6 @@ class _Home extends State<Home> {
         } else {
           return const Center(child: Text('No hotels available'));
         }
-
-        // แสดงตัวโหลดขณะรอข้อมูล
       },
     );
   }

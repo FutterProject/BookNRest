@@ -462,14 +462,14 @@ class _GuestDetailState extends State<GuestDetail> {
                       _phoneController.text.isEmpty) {
                   } else {
                     List<RoomModel?> rooms = await _futureRooms;
-                    int roomId = rooms.isNotEmpty ? rooms[0]?.roomId ?? 0 : 0;
+                    // int roomId = rooms.isNotEmpty ? rooms[0]?.roomId ?? 0 : 0;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => PaymentDetail(
                           selectedRoomCount: selectedRoomCount,
                           hotelId: widget.hotelId,
-                          roomId: roomId,
+                          roomId: widget.roomId,
                           room: widget.room,
                           firstName: _firstNameController.text,
                           lastName: _lastNameController.text,

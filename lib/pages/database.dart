@@ -1,4 +1,5 @@
 import 'package:book_and_rest/pages/home.dart';
+import 'package:book_and_rest/pages/hotel/modelAsHotels.dart';
 import 'package:book_and_rest/pages/model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -18,6 +19,7 @@ class appDatabase {
       await db.execute('''
     CREATE TABLE Hotels (
       hotel_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      userId INTEGER,
       name TEXT,
       address TEXT,
       city TEXT,
@@ -64,15 +66,17 @@ class appDatabase {
     CREATE TABLE Bookings (
       booking_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       room_id INTEGER,
-      userId INTEGER,
+      user_id INTEGER,
       checkin_date DATE,
       checkout_date DATE,
       first_name TEXT, 
       last_name TEXT,
       email TEXT, 
       phone_number TEXT,
+      status INTEGER,
       FOREIGN KEY (room_id) REFERENCES Rooms(room_id),
-      FOREIGN KEY (userId) REFERENCES Users(userId)
+      FOREIGN KEY (user_id) REFERENCES Users(user_id),
+      FOREIGN KEY (status) REFERENCES Status(statusID)
     )
   ''');
       await db.execute('''
@@ -90,6 +94,7 @@ class appDatabase {
       PRIMARY KEY (hotel_id,facilities_id)
     )
   ''');
+
       await db.execute('''
     CREATE TABLE BookingDetail(
             bookingId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
@@ -112,6 +117,12 @@ class appDatabase {
           PRIMARY KEY (userId,hotel_id)
         )
       ''');
+      await db.execute('''
+    CREATE TABLE Status(
+            statusID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            statusName TEXT
+            )
+            ''');
       // เพิ่มข้อมูลลงในตาราง
       await db.rawInsert('''
     INSERT INTO Hotels (hotel_id, name, address, city, ratings , img, lat, long, displacement,lowest , hotel_description)
@@ -121,11 +132,11 @@ class appDatabase {
            (4, 'Bangkok 68', '68 Soi Ratchada 17', 'bangkok', '4.8', 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/45116072.jpg?k=d75f614e5cc7691c4b5ec68af406682a1c81a82f2a599b6d733193a9abc3c114&o=&hp=1', '13.786523060550037', '100.569473995758', 1 , NULL,"Located in Bangkok, Bangkok 68 offers comfortable rooms with air conditioning. Boasting an outdoor pool, this property has a 24-hour front desk. Free Wi-Fi is available throughout the residence. Bangkok 68 is within a 15-minute ride from Central Plaza Grand Rama 9 Mall. It is a 30-minute drive from Don Muang Airport and Suvarnabhumi Airport. On-site parking is available. Modern rooms are provided with a flat-screen cable TV and a refrigerator. An en suite bathroom comes with shower facilities. Some rooms offer a bathtub. For meals, head to local restaurants located within a 10-minute ride away."),
            (5, 'Siam Palace Hotel', '3 Soi Pradiphat 10', 'bangkok', '4.9', 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/190194337.jpg?k=b08a5196df42b9151745d7688bf2e5c0110169fd7059b27ecf0882275a936259&o=&hp=1', '13.79024373904735', '100.54210895157759', 1 , NULL ,"Well located in the Phaya Thai district of Bangkok, Siam Palace Hotel is located 2.8 km from Chatuchak Weekend Market, 4.5 km from Central Plaza Ladprao and 6 km from Siam Discovery. This 3-star hotel offers room service, a 24-hour front desk and free WiFi. The accommodation provides a concierge service, luggage storage space and currency exchange for guests. Guest rooms at the hotel are equipped with a seating area, a flat-screen TV with cable channels and a private bathroom with free toiletries and a bidet. All guest rooms at Siam Palace Hotel include air conditioning and a desk. Siam Paragon Mall is 6.4 km from the accommodation, while Gaysorn Village Shopping Mall is 6.8 km away. The nearest airport is Don Mueang International Airport, 18 km from Siam Palace Hotel."),
            (6, 'Marigold Sukhumvit' , '2009 Moo 6 Sukhumvit Rd', 'bangkok','4.5','https://cf.bstatic.com/xdata/images/hotel/max1024x768/244315856.jpg?k=58ed3e711949477bd9b0219310b9db78100853bddc6ee8496996587d8f60f83a&o=&hp=1','13.652599383328797', '100.59951002273891',1, NULL, "Located in Samutprakarn, a 13-minute walk from Samrong BTS Station, Marigold Sukhumvit offers a fitness centre and free bikes. This property features free WiFi, a garden and a terrace. Offering a private balcony with city views, rooms will provide you with a cable TV, a DVD player and air conditioning. An electric kettle and a seating area included. Featuring a shower, private bathroom also comes with a hairdryer and free toiletries. Suvarnabhumi Airport is only a 30-minute drive from the property."),
-           (7, 'M CASA HOTEL PATTAYA' , '140/90 MOO11 NONGPRUE', 'chonburi','4.6','https://cf.bstatic.com/xdata/images/hotel/max1024x768/415671439.jpg?k=b73e08d90269afe79615848b96da8b7ea52e05fd9384d05bb0a5a91ecd78b84c&o=&hp=1','12.923755957451', '100.87342116875939',1,NULL, "Situated in Nong Prue, 700 metres from Pattaya Beach, M CASA HOTEL PATTAYA features accommodation with an outdoor swimming pool, free private parking, a terrace and a restaurant. With free WiFi, this 4-star hotel offers room service and a 24-hour front desk. The property is non-smoking and is set 2.3 km from Cosy Beach. The units in the hotel are equipped with a kettle. Complete with a private bathroom fitted with a shower and a hairdryer, the rooms at M CASA HOTEL PATTAYA have a flat-screen TV and air conditioning, and certain rooms come with a balcony. All units will provide guests with a fridge. The daily breakfast offers buffet, à la carte or American options. Paradise Beach is 2.4 km from the accommodation, while Bangpra International Golf Club is 42 km from the property. The nearest airport is U-Tapao Rayong-Pattaya International Airport, 45 km from M CASA HOTEL PATTAYA."),
-           (8, 'Sirin Exclusive Hotel' , '338/139 Moo.12 Pratumnak Soi 5', 'chonburi','4.1','https://cf.bstatic.com/xdata/images/hotel/max1024x768/463561092.jpg?k=bbfa20544da07552df0a562a894976036b929b22ad3903860ed8e680e906d742&o=&hp=1','12.912399053257516', '100.86207878039814',1,NULL, "Set in Pattaya South, 700 metres from Pratumnak Beach, Sirin Exclusive Hotel and Residence offers accommodation with an outdoor swimming pool, free private parking, a fitness centre and a garden. Offering a restaurant, the property also has a shared lounge, as well as a sauna and a hot tub. The accommodation features a 24-hour front desk, a shuttle service, room service and free WiFi. At the hotel all rooms include air conditioning, a seating area, a flat-screen TV with cable channels, a safety deposit box and a private bathroom with free toiletries and slippers. All guest rooms will provide guests with a desk and a kettle. Breakfast is available every morning, and includes buffet, à la carte and continental options. Sirin Exclusive Hotel and Residence offers a terrace. Popular points of interest near the accommodation include Paradise Beach, Dongtan Beach and Pattaya Viewpoint. The nearest airport is U-Tapao Rayong-Pattaya International Airport, 47 km from Sirin Exclusive Hotel and Residence."),
-           (9, 'Golden Tulip Pattaya' , '469, Moo.5, Naklua', 'chonburi','3.9','https://cf.bstatic.com/xdata/images/hotel/max1024x768/413209177.jpg?k=e17a27943a77058c0e06dc308a1e4ea8d24ec113d4d14161d0fe24c0ad1b7443&o=&hp=1','12.970462768989806', '100.88443637047497',1,NULL, "Set in Pattaya North, 500 metres from Wong Amat Beach, Golden Tulip Pattaya Beach Resort offers accommodation with an outdoor swimming pool, free private parking, a terrace and a restaurant. This 5-star hotel offers room service, a 24-hour front desk and free WiFi. The accommodation features evening entertainment and babysitting service. All rooms are fitted with a private bathroom, while selected rooms will provide you with a balcony and others also have a sea view. Popular points of interest near the hotel include Wong Prachan Beach, Naklua Beach and The Sanctuary of Truth. The nearest airport is U-Tapao Rayong-Pattaya International Airport, 45 km from Golden Tulip Pattaya Beach Resort."),
-           (10, 'Worita Cove Hotel' , '46/6 Moo 4, Najomtien', 'chonburi','4.8','https://cf.bstatic.com/xdata/images/hotel/max1024x768/158704106.jpg?k=39c5173342e30ff7a96b9718f1f244d5ace8285e08b57172695b5acdb3b908b6&o=&hp=1','12.816832210175987', '100.9126128821166',1,NULL, "Set in Na Jomtien, 600 metres from Ban Amphur Beach, Worita Cove Hotel offers accommodation with an outdoor swimming pool, free private parking, a garden and a restaurant. This 5-star hotel offers room service, a 24-hour front desk and free WiFi. The hotel features an indoor pool and free shuttle service. At the hotel every room has air conditioning, a desk, a terrace with a sea view, a private bathroom, a flat-screen TV, bed linen and towels. All rooms are equipped with a kettle, while certain rooms here will provide you with a kitchenette with a microwave. The units will provide guests with a fridge. Eastern Star Golf Course is 32 km from Worita Cove Hotel, while Emerald Golf Resort is 36 km away. The nearest airport is U-Tapao Rayong-Pattaya International Airport, 32 km from the accommodation."),
-           (11, 'Novotel Marina Sriracha' , '339 Jerm Jom Phon road Sriracha', 'chonburi','4.9','https://cf.bstatic.com/xdata/images/hotel/max1024x768/275964708.jpg?k=050cf9b165e8781768a81a04fe166a0e53f9c8853cc3c5f126fc1503d5b79213&o=&hp=1','13.163810584765216', '100.91957686678036',1,NULL, "Located in Si Racha, 12 km from Bangpra International Golf Club, Novotel Marina Sriracha provides accommodation with a fitness centre, free private parking, a garden and a shared lounge. Featuring room service, this property also provides guests with a terrace. The accommodation features a 24-hour front desk, airport transfers, a kids' club and free WiFi. Guest rooms at the hotel come with air conditioning, a seating area, a flat-screen TV with satellite channels, a safety deposit box and a private bathroom with a bidet, free toiletries and a hairdryer. Rooms are equipped with a kettle, while selected rooms are equipped with a balcony and others also offer city views. At Novotel Marina Sriracha each room is fitted with bed linen and towels. At the accommodation you will find a restaurant serving American, Cantonese and Chinese cuisine. Vegetarian, dairy-free and vegan options can also be requested. Novotel Marina Sriracha offers 4-star accommodation with a sauna and outdoor pool. Bike hire and car hire are available at this hotel and the area is popular for cycling. There is an on-site bar and guests can also make use of the business area. Crystal Bay Golf Club is 16 km from the hotel, while Flight of The Gibbon is 22 km away. The nearest airport is U-Tapao Rayong-Pattaya International Airport, 64 km from Novotel Marina Sriracha."),
+           (7, 'M CASA HOTEL PATTAYA' , '140/90 MOO11 NONGPRUE', 'chon buri','4.6','https://cf.bstatic.com/xdata/images/hotel/max1024x768/415671439.jpg?k=b73e08d90269afe79615848b96da8b7ea52e05fd9384d05bb0a5a91ecd78b84c&o=&hp=1','12.923755957451', '100.87342116875939',1,NULL, "Situated in Nong Prue, 700 metres from Pattaya Beach, M CASA HOTEL PATTAYA features accommodation with an outdoor swimming pool, free private parking, a terrace and a restaurant. With free WiFi, this 4-star hotel offers room service and a 24-hour front desk. The property is non-smoking and is set 2.3 km from Cosy Beach. The units in the hotel are equipped with a kettle. Complete with a private bathroom fitted with a shower and a hairdryer, the rooms at M CASA HOTEL PATTAYA have a flat-screen TV and air conditioning, and certain rooms come with a balcony. All units will provide guests with a fridge. The daily breakfast offers buffet, à la carte or American options. Paradise Beach is 2.4 km from the accommodation, while Bangpra International Golf Club is 42 km from the property. The nearest airport is U-Tapao Rayong-Pattaya International Airport, 45 km from M CASA HOTEL PATTAYA."),
+           (8, 'Sirin Exclusive Hotel' , '338/139 Moo.12 Pratumnak Soi 5', 'chon buri','4.1','https://cf.bstatic.com/xdata/images/hotel/max1024x768/463561092.jpg?k=bbfa20544da07552df0a562a894976036b929b22ad3903860ed8e680e906d742&o=&hp=1','12.912399053257516', '100.86207878039814',1,NULL, "Set in Pattaya South, 700 metres from Pratumnak Beach, Sirin Exclusive Hotel and Residence offers accommodation with an outdoor swimming pool, free private parking, a fitness centre and a garden. Offering a restaurant, the property also has a shared lounge, as well as a sauna and a hot tub. The accommodation features a 24-hour front desk, a shuttle service, room service and free WiFi. At the hotel all rooms include air conditioning, a seating area, a flat-screen TV with cable channels, a safety deposit box and a private bathroom with free toiletries and slippers. All guest rooms will provide guests with a desk and a kettle. Breakfast is available every morning, and includes buffet, à la carte and continental options. Sirin Exclusive Hotel and Residence offers a terrace. Popular points of interest near the accommodation include Paradise Beach, Dongtan Beach and Pattaya Viewpoint. The nearest airport is U-Tapao Rayong-Pattaya International Airport, 47 km from Sirin Exclusive Hotel and Residence."),
+           (9, 'Golden Tulip Pattaya' , '469, Moo.5, Naklua', 'chon buri','3.9','https://cf.bstatic.com/xdata/images/hotel/max1024x768/413209177.jpg?k=e17a27943a77058c0e06dc308a1e4ea8d24ec113d4d14161d0fe24c0ad1b7443&o=&hp=1','12.970462768989806', '100.88443637047497',1,NULL, "Set in Pattaya North, 500 metres from Wong Amat Beach, Golden Tulip Pattaya Beach Resort offers accommodation with an outdoor swimming pool, free private parking, a terrace and a restaurant. This 5-star hotel offers room service, a 24-hour front desk and free WiFi. The accommodation features evening entertainment and babysitting service. All rooms are fitted with a private bathroom, while selected rooms will provide you with a balcony and others also have a sea view. Popular points of interest near the hotel include Wong Prachan Beach, Naklua Beach and The Sanctuary of Truth. The nearest airport is U-Tapao Rayong-Pattaya International Airport, 45 km from Golden Tulip Pattaya Beach Resort."),
+           (10, 'Worita Cove Hotel' , '46/6 Moo 4, Najomtien', 'chon buri','4.8','https://cf.bstatic.com/xdata/images/hotel/max1024x768/158704106.jpg?k=39c5173342e30ff7a96b9718f1f244d5ace8285e08b57172695b5acdb3b908b6&o=&hp=1','12.816832210175987', '100.9126128821166',1,NULL, "Set in Na Jomtien, 600 metres from Ban Amphur Beach, Worita Cove Hotel offers accommodation with an outdoor swimming pool, free private parking, a garden and a restaurant. This 5-star hotel offers room service, a 24-hour front desk and free WiFi. The hotel features an indoor pool and free shuttle service. At the hotel every room has air conditioning, a desk, a terrace with a sea view, a private bathroom, a flat-screen TV, bed linen and towels. All rooms are equipped with a kettle, while certain rooms here will provide you with a kitchenette with a microwave. The units will provide guests with a fridge. Eastern Star Golf Course is 32 km from Worita Cove Hotel, while Emerald Golf Resort is 36 km away. The nearest airport is U-Tapao Rayong-Pattaya International Airport, 32 km from the accommodation."),
+           (11, 'Novotel Marina Sriracha' , '339 Jerm Jom Phon road Sriracha', 'chon buri','4.9','https://cf.bstatic.com/xdata/images/hotel/max1024x768/275964708.jpg?k=050cf9b165e8781768a81a04fe166a0e53f9c8853cc3c5f126fc1503d5b79213&o=&hp=1','13.163810584765216', '100.91957686678036',1,NULL, "Located in Si Racha, 12 km from Bangpra International Golf Club, Novotel Marina Sriracha provides accommodation with a fitness centre, free private parking, a garden and a shared lounge. Featuring room service, this property also provides guests with a terrace. The accommodation features a 24-hour front desk, airport transfers, a kids' club and free WiFi. Guest rooms at the hotel come with air conditioning, a seating area, a flat-screen TV with satellite channels, a safety deposit box and a private bathroom with a bidet, free toiletries and a hairdryer. Rooms are equipped with a kettle, while selected rooms are equipped with a balcony and others also offer city views. At Novotel Marina Sriracha each room is fitted with bed linen and towels. At the accommodation you will find a restaurant serving American, Cantonese and Chinese cuisine. Vegetarian, dairy-free and vegan options can also be requested. Novotel Marina Sriracha offers 4-star accommodation with a sauna and outdoor pool. Bike hire and car hire are available at this hotel and the area is popular for cycling. There is an on-site bar and guests can also make use of the business area. Crystal Bay Golf Club is 16 km from the hotel, while Flight of The Gibbon is 22 km away. The nearest airport is U-Tapao Rayong-Pattaya International Airport, 64 km from Novotel Marina Sriracha."),
            (12, 'Sorin hotel' , '22 Thanon Thetsaban 3', 'surin','4.1','https://cf.bstatic.com/xdata/images/hotel/max1024x768/109510441.jpg?k=f81e070f894d42ed9378bb77586ce76c4670b4ddf431d6e36de6885d3d2ef2eb&o=&hp=1','14.880637480380893', '103.48345055146993',1,NULL, "Located in Surin city centre, Sorin Hotel offers a modern accommodation with sun terrace and views of the city. Free WiFi is featured throughout the property and free private parking is available on site. Every room at this hotel is air conditioned and is equipped with a flat-screen TV. Some rooms have a seating area where you can relax. You will find a kettle in the room. All rooms come with a private bathroom. For your comfort, you will find slippers and a hairdryer. Guests can enjoy the on-site restaurant Ho By. 24-hour front desk and 24-hour security is available at the property. Free use of bicycles is available at this hotel and the area is popular for cycling. The nearest airport is Buri Ram Airport, 46 km from the property."),
            (13, 'Surin Majestic Hotel' , '99 Jitbumrung Road', 'surin','4.5','https://cf.bstatic.com/xdata/images/hotel/max1024x768/152649688.jpg?k=2fe82603e66834459f94c93b989682148f238fe0cedbc6b5c07eaff84eec7dad&o=&hp=1','14.890190488408715', '103.49705860729225',1,NULL, "Surin Majestic Hotel is set in Surin and features a fitness centre and garden. Boasting a 24-hour front desk, this property also provides guests with a restaurant. The accommodation provides valet parking, and luggage storage for guests. All units in Surin Majestic Hotel are equipped with a flat-screen TV. Every room comes with a kettle and a private bathroom, while selected rooms come with a balcony. All rooms at Surin Majestic Hotel include air conditioning and a desk. A buffet breakfast is available each morning at the property. Surin Majestic Hotel offers an outdoor pool. Buriram is 44 km from the property. Buri Ram Airport is 46 km away."),
            (14, 'Thong Tarin Hotel' , '60 Sirirat Road', 'surin','4.5','https://cf.bstatic.com/xdata/images/hotel/max1024x768/68994720.jpg?k=aa38649538519b4c6f8b7561d20b59dcd3acb554fd60981b7c1f96da0a179cb3&o=&hp=1','14.886731978982073', '103.49951349379887',1,NULL, "Boasting an outdoor pool with a sun terrace, Thong Tarin Hotel offers guests with several room options. Guests have access to free WiFi throughout the property. Private parking is possible for those who drive. Delectable Thai food can be sampled at the restaurant on site. All air-conditioned rooms are equipped with a flat-screen TV and a private bathroom with free toiletries. Certain rooms come with a seating area and a working space for guests' comfort. Other activities include billiards and karaoke. Friendly staff are 24-hour available at the front desk and room service is offered daily."),
@@ -158,7 +169,7 @@ class appDatabase {
            (903, '903','Resort Room', 59.00 , 9 ,'https://cf.bstatic.com/xdata/images/hotel/max1024x768/413158126.jpg?k=55705b28408cb723270612454de75e1ccd0d2f6ed510ac0d5be8f38ce8751762&o=' , 2 , 1 , "Room size 32 m² Comfy beds, The air-conditioned suite has 1 bedroom and 1 bathroom with a shower and a hairdryer. Boasting a terrace with garden views, this suite also offers soundproof walls and a flat-screen TV. The unit has 1 bed."),
            (1001, '1001','Superior Twin Room', 99.00 , 10 ,'https://cf.bstatic.com/xdata/images/hotel/max1024x768/159983445.jpg?k=896a940111cbfdf39f1f3c4145298e27cf0eeb18b6ad9a594e39ad2e2d582b8c&o=' , 2 , 1 , "Room size 30 m² Comfy beds, Guests will have a special experience as this twin room provides a pool with a view. The twin room offers air conditioning, a private entrance, a terrace with sea views as well as a private bathroom featuring a shower. The unit offers 2 beds."),
            (1002, '1002','Deluxe Seaview', 49.00 , 10 ,'https://cf.bstatic.com/xdata/images/hotel/max1024x768/159982229.jpg?k=7c1b2549f0b2356ebfffd7f34a601bebff511a06b7793fda88bed9e15777dbca&o=' , 2 , 1 , "Room size 34 m² Comfy beds, Guests will have a special experience as this double room features a pool with a view. The spacious double room offers air conditioning, a private entrance, a terrace with sea views as well as a private bathroom featuring a shower. The unit offers 1 bed."),
-           (1101, '701','Superior room', 69.00 , 11 ,'https://cf.bstatic.com/xdata/images/hotel/max1024x768/275961856.jpg?k=00db13bfa1e7644d5b5ce4fb799531abd2bdf581b8ac8ba2267e63ff7eb14161&o=' , 2 , 1 , "Room size 28 m² Comfy beds, Offering free toiletries, this double room includes a private bathroom with a walk-in shower, a bidet and a hairdryer. The spacious air-conditioned double room offers a flat-screen TV with streaming services, soundproof walls, a minibar, a tea and coffee maker as well as mountain views. The unit has 1 bed."),
+           (1101, '1101','Superior room', 69.00 , 11 ,'https://cf.bstatic.com/xdata/images/hotel/max1024x768/275961856.jpg?k=00db13bfa1e7644d5b5ce4fb799531abd2bdf581b8ac8ba2267e63ff7eb14161&o=' , 2 , 1 , "Room size 28 m² Comfy beds, Offering free toiletries, this double room includes a private bathroom with a walk-in shower, a bidet and a hairdryer. The spacious air-conditioned double room offers a flat-screen TV with streaming services, soundproof walls, a minibar, a tea and coffee maker as well as mountain views. The unit has 1 bed."),
            (1102, '1102','Deluxe Room', 89.00 , 11 ,'https://cf.bstatic.com/xdata/images/hotel/max1024x768/275962057.jpg?k=b751bdcd789c2e8c1dccf26ed18a6960137ac0b2d2af1de0077ba459638d06b5&o=' , 2 , 1 , "Room size 32 m² Comfy beds, Featuring free toiletries and bathrobes, this twin room includes a private bathroom with a walk-in shower, a bidet and a hairdryer. The spacious air-conditioned twin room features a flat-screen TV with streaming services, soundproof walls, a minibar, a tea and coffee maker as well as sea views. The unit has 2 beds."),
            (1201, '1201','Deluxe Room', 79.00 , 12 ,'https://cf.bstatic.com/xdata/images/hotel/max1024x768/109262026.jpg?k=5588d920fc974470e8844676805e5ee0d094630d24221412eceb5933bbb5e8db&o=' , 2 , 1 , "Room size 30 m² Comfy beds, The spacious double room features air conditioning, a minibar, a balcony with city views as well as a private bathroom boasting a shower. The unit has 1 bed."),
            (1202, '1202','Suite', 69.00 , 12 ,'https://cf.bstatic.com/xdata/images/hotel/max1024x768/510555154.jpg?k=a97df3de9da527d3deb8713c922ad920beea283404d1f0aa36cc676fa17b20e5&o=' , 2 , 1 , "Room size 52 m² Comfy beds, This spacious suite features 1 living room, 1 separate bedroom and 1 bathroom with a bath and free toiletries. This air-conditioned suite consists of a dining area, a flat-screen TV with cable channels a minibar and a terrace. The unit has 2 beds."),
@@ -181,10 +192,12 @@ class appDatabase {
            (2003, '2003','Standard Twin Room', 49.00 , 20 ,'https://cf.bstatic.com/xdata/images/hotel/max1024x768/480514774.jpg?k=632857cee29f6e46f4d278a8e03501bd200d14416e4344b53c41dc02e14d9a8f&o=' , 2 , 1 , "Room size 30 m² Comfy beds, This air-conditioned twin room is comprised of a flat-screen TV with cable channels, a private bathroom as well as a terrace. The unit has 2 beds.")
   ''');
       await db.rawInsert('''
-    INSERT INTO Bookings (booking_id, room_id, userId, checkin_date, checkout_date ,first_name , last_name ,email , phone_number)
-    VALUES (1, 101, 1001, '2024-02-01', '2024-02-03', 'perapon' , 'kaewtaweesap' , 'perapon.ka@ku.th' , '0646097891'),
-           (2, 201, 1002, '2024-02-05', '2024-02-08',' chick', 'ken' , 'kfckfc@kfc.com' ,'012345678'),
-           (3, 301, 1002, '2024-02-10', '2024-02-12','mobile' ,'app' ,'abc@abc.com' ,'0132154')
+    INSERT INTO Bookings (booking_id, room_id, user_id, checkin_date, checkout_date ,first_name , last_name ,email , phone_number,status)
+    VALUES (1, 101, 1001, '2024-02-01', '2024-02-03', 'perapon' , 'kaewtaweesap' , 'perapon.ka@ku.th' , '0646097891',1),
+           (2, 201, 1002, '2024-02-05', '2024-02-08',' chick', 'ken' , 'kfckfc@kfc.com' ,'012345678',2),
+           (3, 301, 1002, '2024-02-10', '2024-02-12','mobile' ,'app' ,'abc@abc.com' ,'0132154',3),
+           (4, 301, 1003, '2024-02-10', '2024-02-12','mobile' ,'app' ,'abc@abc.com' ,'0132154',4),
+           (5, 301, 1001, '2024-02-10', '2024-02-12','mobile' ,'app' ,'abc@abc.com' ,'0132154',1)
   ''');
 
       await db.rawInsert('''
@@ -234,6 +247,13 @@ class appDatabase {
       VALUES (1001, 4),
             (1002, 5)
     ''');
+      await db.rawInsert('''
+    INSERT INTO Status (statusName)
+    VALUES ('Not checkin yet.'),
+          ('checked in'),
+          ('checked out'),
+          ('Refunded')
+  ''');
     }));
     return database;
   }
@@ -488,7 +508,6 @@ class appDatabase {
           )
       )
       $cityCondition
-      --AND h.city = ?
       ${selectedFacilityIds.isNotEmpty ? 'AND hf.facilities_id IN ($facilityIdPlaceholders)' : ''}
       AND r.price BETWEEN $startRangeValue AND $endRangeValue
       GROUP BY r.hotel_id, h.name, h.address, h.city, h.img, h.ratings
@@ -502,7 +521,6 @@ class appDatabase {
         wantCheckOut,
         wantCheckIn,
         wantCheckOut,
-        // destination,
         ...selectedFacilityIds,
       ],
     );
@@ -586,15 +604,29 @@ class appDatabase {
       BookingDetailModel bookingDetailModel) async {
     var db = await initializedb();
     await db.insert('bookingdetail', bookingDetailModel.toMap());
+    // สำหรับเพิ่มลง table All Booking
+    Map<String, dynamic> row = {
+      'room_id': bookingDetailModel.roomId,
+      'checkin_date': bookingDetailModel.checkInDate,
+      'checkout_date': bookingDetailModel.checkOutDate,
+      'first_name': bookingDetailModel.firstName,
+      'last_name': bookingDetailModel.lastName,
+      'email': bookingDetailModel.email,
+      'phone_number': bookingDetailModel.phone,
+      'status': 1,
+      // เพิ่ม field อื่น ๆ ที่ต้องการ insert ที่นี่
+    };
+    await db.insert('Bookings', row);
   }
 
   Future<List<BookingDetailModel>> getBookingDetail(int userId) async {
     var db = await initializedb();
     final List<Map<String, dynamic>> maps = await db.rawQuery('''
-    SELECT BookingDetail.*, Hotels.name, Hotels.img
+    SELECT BookingDetail.*, Hotels.name, Hotels.img, Rooms.type
     FROM BookingDetail
     JOIN Hotels ON BookingDetail.hotelId = Hotels.hotel_id
-    WHERE userId = ?
+    JOIN Rooms ON BookingDetail.roomId = Rooms.room_id
+    WHERE BookingDetail.userId = ?
   ''', [userId]);
     // แปลง List<Map<String, dynamic>> เป็น List<Hotel>
     return List.generate(maps.length, (i) {
@@ -697,5 +729,112 @@ class appDatabase {
       where: 'userId = ?',
       whereArgs: [user.usrId],
     );
+  }
+
+  Future<void> InsertRegister(UsersModel userModel) async {
+    var db = await initializedb();
+    await db.insert('Users', userModel.toMap());
+  }
+
+  Future<List<BookingModel>> getBookingAsHotel(BookingModel item) async {
+    var db = await initializedb();
+    final List<Map<String, dynamic>> maps = await db.rawQuery('''
+    SELECT b.booking_id,
+b.first_name,
+b.user_id,
+b.last_name,
+b.email,
+b.phone_number,
+b.checkin_date,
+b.checkout_date,
+s.statusName,
+r.room_number,
+r.type,
+status
+FROM Bookings b 
+JOIN Status s ON b.status = s.statusID 
+JOIN Rooms r ON b.room_id = r.room_id
+JOIN Hotels h ON h.hotel_id = r.hotel_id
+JOIN Users u ON u.userId = h.userId
+WHERE u.userId = ${item.user_id}
+  ''');
+    // แปลง List<Map<String, dynamic>> เป็น List<Hotel>
+    return List.generate(maps.length, (i) {
+      return BookingModel.fromMap(maps[i]);
+    });
+  }
+
+  Future updataStatusBooking(BookingModel model) async {
+    var db = await initializedb();
+    print('++++ ${model.status}');
+    var result = await db.rawQuery(
+      'UPDATE Bookings SET status = ? WHERE booking_id = ?',
+      [model.status, model.booking_id],
+    );
+    return result;
+  }
+
+  Future<List<getHotelModel>> getDetailHotel(getHotelModel user) async {
+    var db = await initializedb();
+    final List<Map<String, dynamic>> result = await db.rawQuery('''
+    SELECT
+hotel_id,
+userId, 
+name,
+address,
+city,
+hotel_description FROM Hotels 
+    WHERE userId = ${user.id}
+  ''');
+
+    // ดำเนินการอื่น ๆ ที่ต้องการในกรณีที่มีข้อมูลผลลัพธ์
+    return List.generate(result.length, (i) {
+      return getHotelModel.fromMap(result[i]);
+    });
+  }
+
+  Future<List<RoomModelForHotel>> getRoom(RoomModelForHotel user) async {
+    var db = await initializedb();
+    print('${user.hotelId}');
+    final List<Map<String, dynamic>> result = await db.rawQuery('''
+SELECT
+r.room_id,
+r.room_number,
+r.type,
+r.price,
+r.hotel_id,
+r.adult,
+r.child,
+r.room_description FROM Rooms r
+JOIN Hotels h ON h.hotel_id = r.hotel_id
+JOIN UsersTest u ON u.userId = h.userId
+    WHERE r.hotel_id = ${user.hotelId}
+  ''');
+
+    // ดำเนินการอื่น ๆ ที่ต้องการในกรณีที่มีข้อมูลผลลัพธ์
+    return List.generate(result.length, (i) {
+      return RoomModelForHotel.fromMap(result[i]);
+    });
+  }
+
+  Future updateDetailHotel(getHotelModel model) async {
+    var db = await initializedb();
+    print('++++ ${model.name}');
+    var result = await db.rawQuery(
+      'UPDATE Hotels SET name = ?, hotel_description = ? WHERE hotel_id = ?',
+      [model.name, model.hotelDescription, model.id],
+    );
+    return result;
+  }
+
+  Future deletBooking(BookingModel model) async {
+    var db = await initializedb();
+    // print('++++ ${model.id}');
+    var result = db.delete(
+      'Bookings',
+      where: 'booking_id=?',
+      whereArgs: [model.booking_id],
+    );
+    return result;
   }
 }
