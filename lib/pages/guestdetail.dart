@@ -461,7 +461,7 @@ class _GuestDetailState extends State<GuestDetail> {
                       _emailController.text.isEmpty ||
                       _phoneController.text.isEmpty) {
                   } else {
-                    List<RoomModel?> rooms = await _futureRooms;
+                    // List<RoomModel?> rooms = await _futureRooms;
                     // int roomId = rooms.isNotEmpty ? rooms[0]?.roomId ?? 0 : 0;
                     Navigator.push(
                       context,

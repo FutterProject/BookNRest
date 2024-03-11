@@ -50,12 +50,32 @@ class _loginState extends State<login> {
         } else {
           print("Admin : ${data.usrName}");
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => hotelState()));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => hotelState(
+                        user_id: data.usrId,
+                      )));
         }
       });
     } else {
       //If not, true the bool value to show error message
-      print('false');
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Login Failed"),
+            content: Text("Email or Password is incorrect."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 

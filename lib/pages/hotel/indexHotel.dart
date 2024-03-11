@@ -3,10 +3,12 @@ import 'dart:async';
 
 // import 'package:book_and_rest/hotel/testPage.dart';
 // import 'package:book_and_rest/pages/hotel/databaseAsHotels.dart';
+import 'package:book_and_rest/check_login.dart';
 import 'package:book_and_rest/pages/database.dart';
 import 'package:book_and_rest/pages/home.dart';
 import 'package:book_and_rest/pages/hoteldetail.dart';
 import 'package:book_and_rest/pages/hotel/modelAsHotels.dart';
+import 'package:book_and_rest/userPreferences.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -104,7 +106,7 @@ class _HomeState extends State<Home> {
   final searchController = TextEditingController();
   var checkInController = TextEditingController();
   var checkOutController = TextEditingController();
-  late Future<List<BookingModel>> _futureBookingDetails;
+  // late Future<List<BookingModel>> _futureBookingDetails;
 
   String? _selectedProvince;
   String? selectedProvince;
@@ -121,8 +123,8 @@ class _HomeState extends State<Home> {
     rangeDateTimeEnd = now.add(const Duration(days: 1)); // วันถัดไป
     rangeDateTime =
         DateTimeRange(start: rangeDateTimeStart, end: rangeDateTimeEnd);
-    _futureBookingDetails =
-        db.getBookingAsHotel(BookingModel(user_id: widget.user_id));
+    // _futureBookingDetails =
+    // db.getBookingAsHotel(BookingModel(user_id: widget.user_id));
   }
 
   String searchText = '';
@@ -220,7 +222,7 @@ class _HomeState extends State<Home> {
         tileColor: Colors.white,
         leading: _leading(model),
         title: Text(
-          'Room ${model.room_number} , ${model.status}',
+          'Room ${model.room_number} ',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Column(
@@ -258,25 +260,6 @@ class _HomeState extends State<Home> {
             )
           ],
         ),
-        trailing: IconButton(
-          onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => updateForm(),
-            //     settings: RouteSettings(arguments: model),
-            //   ),
-            // ).then((_) {
-            //   setState(() {
-            //     db.getAllData();
-            //   });
-            // });
-          },
-          icon: Icon(
-            Icons.arrow_forward_ios,
-            color: Colors.black,
-          ),
-        ),
       );
     } else {
       return SizedBox.shrink();
@@ -311,6 +294,7 @@ class _HomeState extends State<Home> {
   showbutton(BookingModel model) {
     if (model.status == 1) {
       return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           TextButton(
             onPressed: () {
@@ -325,7 +309,8 @@ class _HomeState extends State<Home> {
             child: Container(
                 padding: EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                    color: Colors.red, borderRadius: BorderRadius.circular(5)),
+                    color: Color.fromARGB(255, 26, 119, 7),
+                    borderRadius: BorderRadius.circular(5)),
                 child: Center(
                     child: Text(
                   'CheckIn',
@@ -371,7 +356,8 @@ class _HomeState extends State<Home> {
             child: Container(
                 padding: EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                    color: Colors.red, borderRadius: BorderRadius.circular(5)),
+                    color: Color.fromARGB(255, 26, 119, 7),
+                    borderRadius: BorderRadius.circular(5)),
                 child: Center(
                     child: Text(
                   'CheckOut',
@@ -387,7 +373,7 @@ class _HomeState extends State<Home> {
 
   showDetail(BookingModel model) async {
     return showDialog(
-        barrierColor: Colors.white,
+        // barrierColor: Colors.white,
         context: context,
         builder: (context) {
           return AlertDialog(
@@ -1387,7 +1373,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       return CircularProgressIndicator();
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (snapshot.hasData) {
+                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                       getHotelModel htdetail = snapshot.data!.first;
                       return Column(
                         children: [
@@ -1442,9 +1428,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           SizedBox(height: 10),
                           ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);
+                            onPressed: () async {
+                              await UserPreferences.setsignin(false);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => check_login()));
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
