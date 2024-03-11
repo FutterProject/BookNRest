@@ -647,8 +647,9 @@ class appDatabase {
         // await db.query('hotels', where: 'id=?', whereArgs: [itemId]);
         await db.rawQuery(
       '''
-          SELECT Hotels.*
+          SELECT Hotels.*, MIN(Rooms.price) as lowest
           FROM Hotels 
+          JOIN Rooms ON Rooms.hotel_id = Hotels.hotel_id
           JOIN FavoriteHotel ON Hotels.hotel_id = FavoriteHotel.hotel_id
           WHERE FavoriteHotel.userId = ?
           ''',
@@ -662,6 +663,7 @@ class appDatabase {
         address: result[index]['address'],
         city: result[index]['city'],
         img: result[index]['img'],
+        lowest: result[index]['lowest'],
         ratings: result[index]['ratings'],
       ),
     );

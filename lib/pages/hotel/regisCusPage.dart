@@ -183,6 +183,10 @@ class _regisCusPageState extends State<regisCusPage> {
                               labelText: 'First Name',
                               border: OutlineInputBorder(),
                             ),
+                            validator: (value) {
+                              if (value!.isEmpty)
+                                return 'Please enter your firstname';
+                            },
                           ),
                         ),
                         SizedBox(
@@ -199,25 +203,25 @@ class _regisCusPageState extends State<regisCusPage> {
                             ),
                             validator: (value) {
                               if (value!.isEmpty)
-                                return 'Please enter your username';
+                                return 'Please enter your lastname';
                             },
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 15),
-                    TextFormField(
-                      controller: userNameController,
-                      autofocus: true,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Username',
-                        // icon: Icon(Icons.email)
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) return 'Please enter your username';
-                      },
-                    ),
+                    // SizedBox(height: 15),
+                    // TextFormField(
+                    //   controller: userNameController,
+                    //   autofocus: true,
+                    //   decoration: const InputDecoration(
+                    //     border: OutlineInputBorder(),
+                    //     labelText: 'Username',
+                    //     // icon: Icon(Icons.email)
+                    //   ),
+                    //   validator: (value) {
+                    //     if (value!.isEmpty) return 'Please enter your username';
+                    //   },
+                    // ),
                     SizedBox(height: 15),
                     TextFormField(
                       controller: emailController,
@@ -301,6 +305,7 @@ class _regisCusPageState extends State<regisCusPage> {
                     ),
                     SizedBox(height: 15),
                     TextFormField(
+                      keyboardType: TextInputType.phone,
                       controller: phoneNumberController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -308,10 +313,15 @@ class _regisCusPageState extends State<regisCusPage> {
                         // icon: Icon(Icons.key)
                       ),
                       validator: (value) {
-                        if (value!.isEmpty)
-                          return 'Please enter your Number phone';
+                        if (value!.isEmpty) return 'Fill your phone number';
+                        if (value.length > 12) {
+                          return 'Too long';
+                        }
+
+                        if (!RegExp(r'^[0-9]+$').hasMatch(value))
+                          return 'Number only';
+                        return null;
                       },
-                      keyboardType: TextInputType.phone,
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
@@ -333,10 +343,33 @@ class _regisCusPageState extends State<regisCusPage> {
                         },
                         child: TextButton(
                           onPressed: () async {
+                            if (emailController.text.isEmpty ||
+                                passwordController.text.isEmpty ||
+                                confirmPasswordController.text.isEmpty) {
+                              return showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Register Failed"),
+                                    content:
+                                        Text("Please fill Email and Password."),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("OK"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
                             Navigator.pop(context);
                             //ส่งค่าไป insert
                             UsersModel userModel = UsersModel(
-                                usrName: userNameController.text,
+                                usrName:
+                                    '${firstNameController.text} + ${lastNameController.text}',
                                 usrEmail: emailController.text,
                                 usrPassword: passwordController.text,
                                 address: phoneNumberController.text,

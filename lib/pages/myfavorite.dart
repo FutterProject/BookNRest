@@ -44,84 +44,104 @@ class _MyFavorite extends State<MyFavorite> {
       //     child: Text('กรุณาเข้าสู่ระบบเพื่อแสดงรายการโปรดของคุณ'));
       return const Center(child: CircularProgressIndicator());
     } else {
-      return FutureBuilder<List<HotelModel>>(
-        future: db.getFavoriteHotel(userId!),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            print('Error: ${snapshot.error}');
-            print('Stack trace: ${snapshot.stackTrace}');
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  HotelModel hotel = snapshot.data![index];
-                  return Card(
-                      child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          bottomLeft: Radius.circular(15),
-                          topRight: Radius.circular(15),
-                          bottomRight: Radius.circular(15),
-                        ),
-                        child: Image.network(
-                          '${hotel.img}',
-                          width: 150,
-                          height: 130,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                hotel.name,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Symbols.location_on,
-                                    color: Colors.grey,
-                                  ),
-                                  Text(
-                                    '${hotel.city}',
-                                    // hotel.city,
-                                    maxLines: 1,
-                                  ),
-                                  const Spacer(),
-                                  Icon(
-                                    Symbols.star,
-                                    color: Colors.yellow,
-                                    fill: 1,
-                                  ),
-                                  Text(hotel.ratings.toString())
-                                  // Text("5")
-                                ],
-                              ),
-                            ],
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: FutureBuilder<List<HotelModel>>(
+          future: db.getFavoriteHotel(userId!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              print('Error: ${snapshot.error}');
+              print('Stack trace: ${snapshot.stackTrace}');
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+              return SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    HotelModel hotel = snapshot.data![index];
+                    return Card(
+                        child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            bottomLeft: Radius.circular(15),
+                            topRight: Radius.circular(15),
+                            bottomRight: Radius.circular(15),
+                          ),
+                          child: Image.network(
+                            '${hotel.img}',
+                            width: 150,
+                            height: 130,
+                            fit: BoxFit.cover,
                           ),
                         ),
-                      )
-                    ],
-                  ));
-                },
-              ),
-            );
-          } else {
-            return const Center(child: Text('ยังไม่มีโรงแรมที่กดถูกใจ'));
-          }
-        },
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  hotel.name,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Symbols.location_on,
+                                      color: Colors.grey,
+                                    ),
+                                    Text(
+                                      '${hotel.city}',
+                                      // hotel.city,
+                                      maxLines: 1,
+                                    ),
+                                    const Spacer(),
+                                    Icon(
+                                      Symbols.star,
+                                      color: Colors.yellow,
+                                      fill: 1,
+                                    ),
+                                    Text(hotel.ratings.toString())
+                                    // Text("5")
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      '\$${hotel.lowest}',
+                                      // '\$80',
+                                      style: TextStyle(
+                                          color: Colors.deepPurple,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
+                                    Text(
+                                      '/night',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ));
+                  },
+                ),
+              );
+            } else {
+              return const Center(child: Text('ยังไม่มีโรงแรมที่กดถูกใจ'));
+            }
+          },
+        ),
       );
     }
   }

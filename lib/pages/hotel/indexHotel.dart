@@ -130,87 +130,89 @@ class _HomeState extends State<Home> {
   String searchText = '';
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    searchText = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  hintText: 'Search...',
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      searchText = value;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Search...',
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: FutureBuilder<List<BookingModel>>(
-                  //------ ดึงข้อมูลทั้งหมดจากฐานข้อมูล -------
-                  future: db
-                      .getBookingAsHotel(BookingModel(user_id: widget.user_id)),
-                  builder: (context, snapshot) {
-                    //-------- ตรวจสอบว่ามีข้อมูลใน db.getAlldata หรือไม่ -------
-                    //-------- ถ้ามีข้อมูลให้ดึงข้อมูลมาแสดงใน ListView.builder
-                    //-------- ถ้าไม่มีข้อมูลให้ไปที่คำสั่ง else
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          if (index >= 0 && index < snapshot.data!.length) {
-                            // ตรวจสอบว่าดัชนีที่ไม่เกินขอบเขตของลิสต์
-                            BookingModel topic = snapshot.data![index];
-                            if (topic.first_name!
-                                    .toLowerCase()
-                                    .contains(searchText.toLowerCase()) ||
-                                topic.last_name!
-                                    .toLowerCase()
-                                    .contains(searchText.toLowerCase()) ||
-                                topic.typeName!
-                                    .toLowerCase()
-                                    .contains(searchText.toLowerCase()) ||
-                                topic.room_number!
-                                    .toLowerCase()
-                                    .contains(searchText.toLowerCase()) ||
-                                topic.statusName!
-                                    .toLowerCase()
-                                    .contains(searchText.toLowerCase())) {
-                              print('${topic.booking_id}');
-                              return Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    side: BorderSide(
-                                        color: Colors.black, width: 1)),
-                                color: Colors.white,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    showDetail(topic);
-                                  },
-                                  child: _listBooking(topic),
-                                ),
-                              );
+              Expanded(
+                child: FutureBuilder<List<BookingModel>>(
+                    //------ ดึงข้อมูลทั้งหมดจากฐานข้อมูล -------
+                    future: db.getBookingAsHotel(
+                        BookingModel(user_id: widget.user_id)),
+                    builder: (context, snapshot) {
+                      //-------- ตรวจสอบว่ามีข้อมูลใน db.getAlldata หรือไม่ -------
+                      //-------- ถ้ามีข้อมูลให้ดึงข้อมูลมาแสดงใน ListView.builder
+                      //-------- ถ้าไม่มีข้อมูลให้ไปที่คำสั่ง else
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            if (index >= 0 && index < snapshot.data!.length) {
+                              // ตรวจสอบว่าดัชนีที่ไม่เกินขอบเขตของลิสต์
+                              BookingModel topic = snapshot.data![index];
+                              if (topic.first_name!
+                                      .toLowerCase()
+                                      .contains(searchText.toLowerCase()) ||
+                                  topic.last_name!
+                                      .toLowerCase()
+                                      .contains(searchText.toLowerCase()) ||
+                                  topic.typeName!
+                                      .toLowerCase()
+                                      .contains(searchText.toLowerCase()) ||
+                                  topic.room_number!
+                                      .toLowerCase()
+                                      .contains(searchText.toLowerCase()) ||
+                                  topic.statusName!
+                                      .toLowerCase()
+                                      .contains(searchText.toLowerCase())) {
+                                print('${topic.booking_id}');
+                                return Card(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      side: BorderSide(
+                                          color: Colors.black, width: 1)),
+                                  color: Colors.white,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showDetail(topic);
+                                    },
+                                    child: _listBooking(topic),
+                                  ),
+                                );
+                              } else {
+                                return SizedBox.shrink();
+                                // return Center(child: Text('No Booking Now.'));
+                              }
                             } else {
                               return SizedBox.shrink();
                               // return Center(child: Text('No Booking Now.'));
                             }
-                          } else {
-                            return SizedBox.shrink();
-                            // return Center(child: Text('No Booking Now.'));
-                          }
-                        },
-                      );
-                      //-------- ถ้าไม่มีข้อมูลในฐานข้อมูลให้แสดงคำว่า 'No data' --------
-                    } else {
-                      return Center(child: Text('No Booking Now.'));
-                    }
-                  }),
-            ),
-          ],
+                          },
+                        );
+                        //-------- ถ้าไม่มีข้อมูลในฐานข้อมูลให้แสดงคำว่า 'No data' --------
+                      } else {
+                        return Center(child: Text('No Booking Now.'));
+                      }
+                    }),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -833,86 +835,88 @@ class CompleteScreenState extends State<CompleteScreen> {
   String searchText = '';
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    searchText = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  hintText: 'Search...',
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      searchText = value;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Search...',
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: FutureBuilder<List<BookingModel>>(
-                  //------ ดึงข้อมูลทั้งหมดจากฐานข้อมูล ------
-                  future: db
-                      .getBookingAsHotel(BookingModel(user_id: widget.user_id)),
-                  builder: (context, snapshot) {
-                    //-------- ตรวจสอบว่ามีข้อมูลใน db.getAlldata หรือไม่ --------
-                    //-------- ถ้ามีข้อมูลให้ดึงข้อมูลมาแสดงใน ListView.builder
-                    //-------- ถ้าไม่มีข้อมูลให้ไปที่คำสั่ง else
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          if (index >= 0 && index < snapshot.data!.length) {
-                            // ตรวจสอบว่าดัชนีที่ไม่เกินขอบเขตของลิสต์
-                            BookingModel topic = snapshot.data![index];
-                            if (topic.first_name!
-                                    .toLowerCase()
-                                    .contains(searchText.toLowerCase()) ||
-                                topic.last_name!
-                                    .toLowerCase()
-                                    .contains(searchText.toLowerCase()) ||
-                                topic.typeName!
-                                    .toLowerCase()
-                                    .contains(searchText.toLowerCase()) ||
-                                topic.room_number!
-                                    .toLowerCase()
-                                    .contains(searchText.toLowerCase()) ||
-                                topic.statusName!
-                                    .toLowerCase()
-                                    .contains(searchText.toLowerCase())) {
-                              return Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    side: BorderSide(color: Colors.black)),
-                                color: Colors.white,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    showDetail(topic);
-                                  },
-                                  child: _listBooking(topic),
-                                ),
-                              );
+              Expanded(
+                child: FutureBuilder<List<BookingModel>>(
+                    //------ ดึงข้อมูลทั้งหมดจากฐานข้อมูล ------
+                    future: db.getBookingAsHotel(
+                        BookingModel(user_id: widget.user_id)),
+                    builder: (context, snapshot) {
+                      //-------- ตรวจสอบว่ามีข้อมูลใน db.getAlldata หรือไม่ --------
+                      //-------- ถ้ามีข้อมูลให้ดึงข้อมูลมาแสดงใน ListView.builder
+                      //-------- ถ้าไม่มีข้อมูลให้ไปที่คำสั่ง else
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            if (index >= 0 && index < snapshot.data!.length) {
+                              // ตรวจสอบว่าดัชนีที่ไม่เกินขอบเขตของลิสต์
+                              BookingModel topic = snapshot.data![index];
+                              if (topic.first_name!
+                                      .toLowerCase()
+                                      .contains(searchText.toLowerCase()) ||
+                                  topic.last_name!
+                                      .toLowerCase()
+                                      .contains(searchText.toLowerCase()) ||
+                                  topic.typeName!
+                                      .toLowerCase()
+                                      .contains(searchText.toLowerCase()) ||
+                                  topic.room_number!
+                                      .toLowerCase()
+                                      .contains(searchText.toLowerCase()) ||
+                                  topic.statusName!
+                                      .toLowerCase()
+                                      .contains(searchText.toLowerCase())) {
+                                return Card(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      side: BorderSide(color: Colors.black)),
+                                  color: Colors.white,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showDetail(topic);
+                                    },
+                                    child: _listBooking(topic),
+                                  ),
+                                );
+                              } else {
+                                return SizedBox.shrink();
+                                // return Center(child: Text('No data'));
+                              }
                             } else {
-                              return SizedBox.shrink();
-                              // return Center(child: Text('No data'));
+                              // return SizedBox.shrink();
+                              return Center(child: Text('No data'));
                             }
-                          } else {
-                            // return SizedBox.shrink();
-                            return Center(child: Text('No data'));
-                          }
-                        },
-                      );
-                      //-------- ถ้าไม่มีข้อมูลในฐานข้อมูลให้แสดงคำว่า 'No data' --------
-                    } else {
-                      // return SizedBox.shrink();
-                      return Center(child: Text('No data'));
-                    }
-                  }),
-            ),
-          ],
+                          },
+                        );
+                        //-------- ถ้าไม่มีข้อมูลในฐานข้อมูลให้แสดงคำว่า 'No data' --------
+                      } else {
+                        // return SizedBox.shrink();
+                        return Center(child: Text('No data'));
+                      }
+                    }),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1343,124 +1347,128 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => updateForm(user_id: widget.id)),
-          ).then((_) => setState(() {
-                db.getDetailHotel(getHotelModel(id: widget.id!));
-              }));
-        },
-        child: Icon(Icons.edit),
-      ),
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 45.0, horizontal: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FutureBuilder<List<getHotelModel>>(
-                  future: widget.id != null
-                      ? db.getDetailHotel(getHotelModel(id: widget.id!))
-                      : null,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                      getHotelModel htdetail = snapshot.data!.first;
-                      return Column(
-                        children: [
-                          Text(
-                            "${htdetail.name}",
-                            style: const TextStyle(
-                                fontSize: 28,
-                                color: Color.fromRGBO(135, 97, 244, 1)),
-                          ),
-                          Text(
-                            "${htdetail.city}",
-                            style: const TextStyle(
-                                fontSize: 17, color: Colors.grey),
-                          ),
-                          SizedBox(height: 10),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(10),
+    return SafeArea(
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => updateForm(user_id: widget.id)),
+            ).then((_) => setState(() {
+                  db.getDetailHotel(getHotelModel(id: widget.id!));
+                }));
+          },
+          child: Icon(Icons.edit),
+        ),
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 45.0, horizontal: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FutureBuilder<List<getHotelModel>>(
+                    future: widget.id != null
+                        ? db.getDetailHotel(getHotelModel(id: widget.id!))
+                        : null,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (snapshot.hasData &&
+                          snapshot.data!.isNotEmpty) {
+                        getHotelModel htdetail = snapshot.data!.first;
+                        return Column(
+                          children: [
+                            Text(
+                              "${htdetail.name}",
+                              style: const TextStyle(
+                                  fontSize: 28,
+                                  color: Color.fromRGBO(135, 97, 244, 1)),
                             ),
-                            child: ListTile(
-                              leading: const Icon(Icons.person, size: 30),
-                              subtitle: const Text("Address"),
-                              title:
-                                  Text("${htdetail.address} ${htdetail.city}"),
+                            Text(
+                              "${htdetail.city}",
+                              style: const TextStyle(
+                                  fontSize: 17, color: Colors.grey),
                             ),
-                          ),
-                          SizedBox(height: 10),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(10),
+                            SizedBox(height: 10),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: ListTile(
+                                leading: const Icon(Icons.person, size: 30),
+                                subtitle: const Text("Address"),
+                                title: Text(
+                                    "${htdetail.address} ${htdetail.city}"),
+                              ),
                             ),
-                            child: ListTile(
-                              leading: const Icon(Icons.email, size: 30),
-                              title: Text("${htdetail.city}"),
-                              subtitle: Text("City"),
+                            SizedBox(height: 10),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: ListTile(
+                                leading: const Icon(Icons.email, size: 30),
+                                title: Text("${htdetail.city}"),
+                                subtitle: Text("City"),
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 10),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(10),
+                            SizedBox(height: 10),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: ListTile(
+                                leading:
+                                    const Icon(Icons.account_circle, size: 30),
+                                title: const Text("Description"),
+                                subtitle: Text('${htdetail.hotelDescription}'),
+                              ),
                             ),
-                            child: ListTile(
-                              leading:
-                                  const Icon(Icons.account_circle, size: 30),
-                              title: const Text("Description"),
-                              subtitle: Text('${htdetail.hotelDescription}'),
+                            SizedBox(height: 10),
+                            ElevatedButton(
+                              onPressed: () async {
+                                await UserPreferences.setsignin(false);
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => check_login()));
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.logout),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    'Logout',
+                                    style: TextStyle(
+                                        color: const Color.fromARGB(
+                                            255, 228, 14, 14),
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(400, 50),
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 10),
-                          ElevatedButton(
-                            onPressed: () async {
-                              await UserPreferences.setsignin(false);
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => check_login()));
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.logout),
-                                SizedBox(width: 10),
-                                Text(
-                                  'Logout',
-                                  style: TextStyle(
-                                      color: const Color.fromARGB(
-                                          255, 228, 14, 14),
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(400, 50),
-                            ),
-                          ),
-                        ],
-                      );
-                    } else {
-                      return Center(child: Text('No data'));
-                    }
-                  },
-                ),
-              ],
+                          ],
+                        );
+                      } else {
+                        return Center(child: Text('No data'));
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

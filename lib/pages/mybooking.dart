@@ -44,92 +44,95 @@ class _MyBooking extends State<MyBooking> {
   _buildMyBookingDetails() {
     print("buildNearest working....");
     if (userId != null) {
-      return FutureBuilder<List<BookingDetailModel>>(
-        future: db.getBookingDetail(userId!),
-        // future: _futureBookingDetails,
-        // ใช้ของพีแล้วมันไม่โชว์เอ๋อไรไม่รู้
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            print('Error: ${snapshot.error}');
-            print('Stack trace: ${snapshot.stackTrace}');
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                BookingDetailModel hotel = snapshot.data![index];
-                return Card(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HotelDetailPage(
-                                  hotelId: hotel.hotelId,
-                                )),
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(15),
-                            bottomLeft: Radius.circular(15),
-                            topRight: Radius.circular(15),
-                            bottomRight: Radius.circular(15),
-                          ),
-                          child: Image.network(
-                            '${hotel.hotelImg}',
-                            width: 150,
-                            height: 200,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Container(
-                            child: Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${hotel.hotelName}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
-                                Text(
-                                  'Room Type : ${hotel.roomType}',
-                                ),
-                                Text(
-                                  'Room Number : ${hotel.roomId}',
-                                ),
-                                Text(
-                                  'Number of Room : ${hotel.selectedRoomCount}',
-                                ),
-                                Text(
-                                  'check-in : ${hotel.checkInDate}',
-                                ),
-                                Text('check-out : ${hotel.checkOutDate}'),
-                              ],
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: FutureBuilder<List<BookingDetailModel>>(
+          future: db.getBookingDetail(userId!),
+          // future: _futureBookingDetails,
+          // ใช้ของพีแล้วมันไม่โชว์เอ๋อไรไม่รู้
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              print('Error: ${snapshot.error}');
+              print('Stack trace: ${snapshot.stackTrace}');
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  BookingDetailModel hotel = snapshot.data![index];
+                  return Card(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HotelDetailPage(
+                                    hotelId: hotel.hotelId,
+                                  )),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              bottomLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                              bottomRight: Radius.circular(15),
+                            ),
+                            child: Image.network(
+                              '${hotel.hotelImg}',
+                              width: 150,
+                              height: 200,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        ))
-                      ],
+                          Container(
+                              child: Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${hotel.hotelName}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                  Text(
+                                    'Room Type : ${hotel.roomType}',
+                                  ),
+                                  Text(
+                                    'Room Number : ${hotel.roomId}',
+                                  ),
+                                  Text(
+                                    'Number of Room : ${hotel.selectedRoomCount}',
+                                  ),
+                                  Text(
+                                    'check-in : ${hotel.checkInDate}',
+                                  ),
+                                  Text('check-out : ${hotel.checkOutDate}'),
+                                ],
+                              ),
+                            ),
+                          ))
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            );
-          } else {
-            return const Center(child: Text('Not booking yet'));
-          }
+                  );
+                },
+              );
+            } else {
+              return const Center(child: Text('Not booking yet'));
+            }
 
-          // แสดงตัวโหลดขณะรอข้อมูล
-        },
+            // แสดงตัวโหลดขณะรอข้อมูล
+          },
+        ),
       );
     }
   }

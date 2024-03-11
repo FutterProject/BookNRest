@@ -379,7 +379,7 @@ class _Home extends State<Home> {
             child: ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: snapshot.data!.length,
+              itemCount: snapshot.data!.length < 5 ? snapshot.data!.length : 5,
               itemBuilder: (context, index) {
                 HotelAllModel hotel = snapshot.data![index];
                 return Padding(
