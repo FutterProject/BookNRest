@@ -403,6 +403,7 @@ class _PaymentDetailState extends State<PaymentDetail> {
                   ],
                 ),
               ),
+              SizedBox(height: 50)
             ],
           ),
         ],

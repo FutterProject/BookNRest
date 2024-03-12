@@ -208,7 +208,7 @@ class appDatabase {
       await db.rawInsert('''
     INSERT INTO Users (userId, userName, userEmail, userPass, address, role)
     VALUES (1001, 'John Does', 'john@example.com','123456','Ku sriracha' , 1),
-           (1002, 'pamonpon', 'test@test.com','123456', 'Bangkok' , 1),
+           (1002, 'pamonpon', 'test@test.com','123456', 'Building 1, Floor 3, No. 199 Moo 6, Sukhumvit Road, Thung Sukhla, Si Racha, Chon Buri, 20230' , 1),
            (1003, 'Donmuanghotel', 'donmuang.h@hotel.com','123456', 'Ku sriracha' , 2),
            (1004, 'Peerapon', 'Peerapon@test.com','123456', 'Samut Prakan' , 1),
            (1005, 'phunatcha', 'phunatcha@test.com','123456', 'Chonburi' , 1)
@@ -647,9 +647,9 @@ class appDatabase {
         // await db.query('hotels', where: 'id=?', whereArgs: [itemId]);
         await db.rawQuery(
       '''
-          SELECT Hotels.*, MIN(Rooms.price) as lowest
+          SELECT Hotels.*
           FROM Hotels 
-          JOIN Rooms ON Rooms.hotel_id = Hotels.hotel_id
+          --JOIN Rooms ON Rooms.hotel_id = Hotels.hotel_id
           JOIN FavoriteHotel ON Hotels.hotel_id = FavoriteHotel.hotel_id
           WHERE FavoriteHotel.userId = ?
           ''',
@@ -663,7 +663,7 @@ class appDatabase {
         address: result[index]['address'],
         city: result[index]['city'],
         img: result[index]['img'],
-        lowest: result[index]['lowest'],
+        // lowest: result[index]['lowest'],
         ratings: result[index]['ratings'],
       ),
     );

@@ -10,7 +10,7 @@ class Filter extends StatefulWidget {
 }
 
 class _Filter extends State<Filter> {
-  RangeValues _currentRangeValues = const RangeValues(0, 100);
+  RangeValues _currentRangeValues = const RangeValues(0, 160);
   final appDatabase db = appDatabase();
   List<FacilitiesHotel>? facilities;
 
@@ -74,7 +74,7 @@ class _Filter extends State<Filter> {
               RangeSlider(
                 values: _currentRangeValues,
                 min: 0,
-                max: 100,
+                max: 160,
                 divisions: 10,
                 labels: RangeLabels(
                     _currentRangeValues.start.round().toString(),
@@ -85,13 +85,13 @@ class _Filter extends State<Filter> {
                   });
                 },
               ),
-              Text(
-                'Ratings',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              GestureDetector(
-                child: Text("5 Star"),
-              ),
+              // Text(
+              //   'Ratings',
+              //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              // ),
+              // GestureDetector(
+              //   child: Text("5 Star"),
+              // ),
               Text(
                 'Efficiency',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

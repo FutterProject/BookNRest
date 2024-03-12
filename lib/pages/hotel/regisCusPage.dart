@@ -35,71 +35,6 @@ class _regisCusPageState extends State<regisCusPage> {
   bool _isObscure = true;
   bool _isObscure2 = true;
 
-  void signUserUp(String email, String password, String rule) async {
-    CircularProgressIndicator();
-    // if (_formKey.currentState!.validate()) {
-    //   await _auth
-    //       .createUserWithEmailAndPassword(email: email, password: password)
-    //       .then((value) => {postDetailsToFirestore(email, password, rule)})
-    //       .catchError((e) {});
-    // }
-  }
-
-  // postDetailsToFirestore(String email, String password, String rule) async {
-  //   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  //   var user = _auth.currentUser;
-  //   CollectionReference ref = FirebaseFirestore.instance.collection('Users');
-  //   CollectionReference cus = FirebaseFirestore.instance.collection('Customer');
-  //   ref.doc(user!.uid).set({
-  //     'email': emailController.text,
-  //     'password': passwordController.text,
-  //     'rule': rule
-  //   });
-  //   cus.doc(user!.uid).set({
-  //     'userName': userNameController.text,
-  //     'firstName': firstNameController.text,
-  //     'lastName': lastNameController.text,
-  //   });
-  //   Navigator.pushReplacement(
-  //       context, MaterialPageRoute(builder: (context) => login()));
-  // }
-  // postDetailsToFirestore(String email, String password, String rule) async {
-  //   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  //   var user = _auth.currentUser;
-  //   CollectionReference ref = FirebaseFirestore.instance.collection('Users');
-  //   CollectionReference cus = FirebaseFirestore.instance.collection('Customer');
-  //   ref.doc(user!.uid).set({
-  //     'email': emailController.text,
-  //     'password': passwordController.text,
-  //     'rule': rule
-  //   });
-  //   cus.doc(user!.uid).set({});
-  //   Navigator.pushReplacement(
-  //       context, MaterialPageRoute(builder: (context) => login()));
-  // }
-  // void signUserup(BuildContext context) async {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return Center(child: CircularProgressIndicator());
-  //     },
-  //   );
-  //   try {
-  //     if (passwordController.text == confirmPasswordController.text) {
-  //       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-  //         email: emailController.text,
-  //         password: passwordController.text,
-  //       );
-  //       Navigator.pop(context);
-  //     } else {
-  //       print("Passwords don't match");
-  //     }
-  //   } on FirebaseAuthException catch (e) {
-  //     print(e.message);
-  //   }
-  //   Navigator.pop(context);
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -338,8 +273,8 @@ class _regisCusPageState extends State<regisCusPage> {
                           //     'rule': 'customer'
                           //   });
                           // }
-                          signUserUp(emailController.text,
-                              passwordController.text, 'customer');
+                          // signUserUp(emailController.text,
+                          //     passwordController.text, 'customer');
                         },
                         child: TextButton(
                           onPressed: () async {
@@ -443,13 +378,6 @@ class _regisCusPageState extends State<regisCusPage> {
           ),
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     Navigator.of(context).pop();
-      //   },
-      //   child: Icon(Icons.arrow_back),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
     );
   }
 }

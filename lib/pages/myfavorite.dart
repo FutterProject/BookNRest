@@ -54,7 +54,7 @@ class _MyFavorite extends State<MyFavorite> {
             } else if (snapshot.hasError) {
               print('Error: ${snapshot.error}');
               print('Stack trace: ${snapshot.stackTrace}');
-              return Center(child: Text('Error: ${snapshot.error}'));
+              return Center(child: Text('No favorite yet.'));
             } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
               return SizedBox(
                 height: MediaQuery.of(context).size.height,
@@ -112,22 +112,22 @@ class _MyFavorite extends State<MyFavorite> {
                                     // Text("5")
                                   ],
                                 ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      '\$${hotel.lowest}',
-                                      // '\$80',
-                                      style: TextStyle(
-                                          color: Colors.deepPurple,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    Text(
-                                      '/night',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ],
-                                ),
+                                // Row(
+                                //   children: [
+                                //     Text(
+                                //       '\$${hotel.lowest}',
+                                //       // '\$80',
+                                //       style: TextStyle(
+                                //           color: Colors.deepPurple,
+                                //           fontWeight: FontWeight.bold,
+                                //           fontSize: 16),
+                                //     ),
+                                //     Text(
+                                //       '/night',
+                                //       style: TextStyle(fontSize: 16),
+                                //     ),
+                                //   ],
+                                // ),
                               ],
                             ),
                           ),

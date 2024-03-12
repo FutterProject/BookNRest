@@ -171,20 +171,20 @@ class _loginState extends State<login> {
                           passwordController.text = value!;
                         },
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                              onTap: () {},
-                              child: Text(
-                                'Forgot Password?',
-                                style: TextStyle(color: Colors.blue[900]),
-                              )),
-                        ],
-                      ),
+                      // SizedBox(
+                      //   height: 5,
+                      // ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //     GestureDetector(
+                      //         onTap: () {},
+                      //         child: Text(
+                      //           'Forgot Password?',
+                      //           style: TextStyle(color: Colors.blue[900]),
+                      //         )),
+                      //   ],
+                      // ),
                       SizedBox(
                         height: 20,
                       ),
