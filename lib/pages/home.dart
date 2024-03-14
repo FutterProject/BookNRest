@@ -2,14 +2,18 @@ import 'dart:math';
 
 import 'package:book_and_rest/pages/database.dart';
 import 'package:book_and_rest/pages/destination.dart';
+import 'package:book_and_rest/pages/hoteldetail.dart';
+import 'package:book_and_rest/pages/index.dart';
 import 'package:book_and_rest/pages/model.dart';
 import 'package:book_and_rest/pages/searchHotel.dart';
+import 'package:book_and_rest/userPreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:custom_calender_picker2/custom_calender_picker2.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:geolocator/geolocator.dart';
 appDatabase db = appDatabase();
@@ -24,7 +28,7 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
-  UserModel? userModel;
+  // UserModel? userModel;
   DateTimeRange? rangeDateTime;
   final DateTime now = DateTime.now();
   late DateTime rangeDateTimeStart; // วันที่ปัจจุบัน
@@ -32,9 +36,6 @@ class _Home extends State<Home> {
 
   bool submit = false;
   final formKey = GlobalKey<FormState>();
-  final searchController = TextEditingController();
-  var checkInController = TextEditingController();
-  var checkOutController = TextEditingController();
   String? _selectedProvince;
   String? selectedProvince;
 
@@ -50,8 +51,17 @@ class _Home extends State<Home> {
     rangeDateTimeEnd = now.add(const Duration(days: 1)); // วันถัดไป
     rangeDateTime =
         DateTimeRange(start: rangeDateTimeStart, end: rangeDateTimeEnd);
-    // userModel = widget.userModel;
     findLocation();
+    initCheckinCheckOut();
+  }
+
+  void initCheckinCheckOut() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+        'checkindate', rangeDateTime!.start.toString().substring(0, 10));
+    await prefs.setString(
+        'checkoutdate', rangeDateTime!.end.toString().substring(0, 10));
+    setState(() {});
   }
 
   @override
@@ -67,7 +77,14 @@ class _Home extends State<Home> {
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.only(top: 20),
+                    padding: const EdgeInsets.only(top: 20, bottom: 10),
+                    alignment: Alignment.centerLeft,
+                    child: Image.asset(
+                      'assets/icons/Book&Rest-logo2.png',
+                      width: 200,
+                    ),
+                  ),
+                  Container(
                     alignment: Alignment.centerLeft,
                     child: const Text(
                       "Where would you like to go?",
@@ -75,7 +92,9 @@ class _Home extends State<Home> {
                           TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                   ),
+
                   SizedBox(height: 10),
+
                   GestureDetector(
                     onTap: () async {
                       selectedProvince = await Navigator.push(
@@ -139,6 +158,18 @@ class _Home extends State<Home> {
                             if (result != null) {
                               if (result is DateTimeRange) {
                                 rangeDateTime = result;
+                                final SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                await prefs.setString(
+                                    'checkindate',
+                                    rangeDateTime!.start
+                                        .toString()
+                                        .substring(0, 10));
+                                await prefs.setString(
+                                    'checkoutdate',
+                                    rangeDateTime!.end
+                                        .toString()
+                                        .substring(0, 10));
                                 setState(() {});
                               }
                             }
@@ -165,6 +196,13 @@ class _Home extends State<Home> {
                       const SizedBox(width: 10),
                       ElevatedButton(
                         onPressed: () {
+                          // final SharedPreferences prefs =
+                          //     await SharedPreferences.getInstance();
+                          // await prefs.setString('checkindate',
+                          //     rangeDateTime!.start.toString().substring(0, 10));
+                          // await prefs.setString('checkoutdate',
+                          //     rangeDateTime!.end.toString().substring(0, 10));
+
                           if (formKey.currentState!.validate() &&
                               rangeDateTime != null &&
                               _selectedProvince != null) {
@@ -173,6 +211,7 @@ class _Home extends State<Home> {
                               print("=========Click on Search=========");
                               // db.showAllRoom();
                             });
+
                             var sendData = [
                               _selectedProvince.toString().toLowerCase(),
                               rangeDateTime!.start.toString().substring(0, 10),
@@ -247,50 +286,52 @@ class _Home extends State<Home> {
     );
   }
 
-  Future<Null> findLocation() async {
+  Future<void> setUsetLocation() async {
+    await UserPreferences.setLatLng(myLat!, myLong!);
+  }
+
+  Future findLocation() async {
     LocationData? locationData = await findLocationData();
     if (locationData != null) {
-      setState(() {
-        myLat = locationData.latitude!;
-        myLong = locationData.longitude!;
-        hotelLat = 13.118685137188292;
-        hotelLong = 100.92146253209525;
-        // hotelLat = double.parse(userModel.lat);
-        // hotelLong = double.parse(userModel!.long);
-
-        print(
-            'myLat : $myLat | myLong : $myLong ==== hotelLat : $hotelLat | hotelLong : $hotelLong');
-        distance = calculateDistance(myLat!, myLong!, hotelLat!, hotelLong!);
-        var myFormat = NumberFormat('#0.0#', 'en_US');
-        distanceString = myFormat.format(distance);
-        print('Distance from me to hotel : $distance => $distanceString');
-      });
+      if (mounted) {
+        setState(() {
+          myLat = locationData.latitude!;
+          myLong = locationData.longitude!;
+          setUsetLocation();
+          // distance = calculateDistance(myLat!, myLong!, hotelLat!, hotelLong!);
+          // var myFormat = NumberFormat('#0.0#', 'en_US');
+          // distanceString = myFormat.format(distance);
+          // print('Distance from me to hotel : $distance => $distanceString');
+        });
+      }
     } else {
-      setState(
-        () {
-          //set default at Victory Monument
-          myLat = 13.764943059692726;
-          myLong = 100.53828945433192;
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Location Access Denied'),
-                content:
-                    Text('Please enable location access to use this feature.'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
-        },
-      );
+      if (mounted) {
+        setState(
+          () {
+            //set default at Victory Monument
+            myLat = 13.764943059692726;
+            myLong = 100.53828945433192;
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Location Access Denied'),
+                  content: Text(
+                      'Please enable location access to use this feature.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        );
+      }
     }
   }
 
@@ -338,38 +379,39 @@ class _Home extends State<Home> {
             child: ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: snapshot.data!.length,
+              itemCount: snapshot.data!.length < 5 ? snapshot.data!.length : 5,
               itemBuilder: (context, index) {
                 HotelAllModel hotel = snapshot.data![index];
                 return Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: Stack(
                     children: <Widget>[
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Image.network(
-                          '${hotel.img}',
-                          height: double.infinity,
-                          width: 220,
-                          fit: BoxFit.cover,
+                      GestureDetector(
+                        onTap: () async {
+                          // final SharedPreferences prefs =
+                          //     await SharedPreferences.getInstance();
+                          // await prefs.setString('checkindate',
+                          //     rangeDateTime!.start.toString().substring(0, 10));
+                          // await prefs.setString('checkoutdate',
+                          //     rangeDateTime!.end.toString().substring(0, 10));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HotelDetail(
+                                      hotelId: hotel.hotelId,
+                                    )),
+                          );
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.network(
+                            '${hotel.img}',
+                            height: double.infinity,
+                            width: 220,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                      // Align(
-                      //   alignment: Alignment.bottomLeft,
-                      //   child: Padding(
-                      //     padding: EdgeInsets.all(10),
-                      //     child: Text(
-                      //       '${hotel.name}',
-                      //       style: TextStyle(
-                      //         color: Colors.white,
-                      //         fontSize: 20,
-                      //         fontWeight: FontWeight.bold,
-                      //         backgroundColor: Colors.black
-                      //             .withOpacity(0.6),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                       Positioned(
                         bottom: 10,
                         left: 12,
@@ -435,114 +477,6 @@ class _Home extends State<Home> {
       },
     );
   }
-  // Widget _buildPopularHotels() {
-  //   return FutureBuilder<List<HotelModel>>(
-  //     future: db.getAllData(),
-  //     builder: (context, snapshot) {
-  //       if (snapshot.hasData) {
-
-  //         return SizedBox(
-  //           height: 200,
-  //           child: ListView.builder(
-  //             shrinkWrap: true,
-  //             scrollDirection: Axis.horizontal,
-  //             itemCount: snapshot.data!.length,
-  //             itemBuilder: (context, index) {
-  //               HotelModel hotel = snapshot.data![index];
-  //               return Padding(
-  //                 padding: const EdgeInsets.only(right: 10),
-  //                 child: Stack(
-  //                   children: <Widget>[
-  //                     ClipRRect(
-  //                       borderRadius: BorderRadius.circular(15),
-  //                       child: Image.network(
-  //                         '${hotel.img}',
-  //                         height: double.infinity,
-  //                         width: 220,
-  //                         fit: BoxFit.cover,
-  //                       ),
-  //                     ),
-  //                     // Align(
-  //                     //   alignment: Alignment.bottomLeft,
-  //                     //   child: Padding(
-  //                     //     padding: EdgeInsets.all(10),
-  //                     //     child: Text(
-  //                     //       '${hotel.name}',
-  //                     //       style: TextStyle(
-  //                     //         color: Colors.white,
-  //                     //         fontSize: 20,
-  //                     //         fontWeight: FontWeight.bold,
-  //                     //         backgroundColor: Colors.black
-  //                     //             .withOpacity(0.6),
-  //                     //       ),
-  //                     //     ),
-  //                     //   ),
-  //                     // ),
-  //                     Positioned(
-  //                       bottom: 10,
-  //                       left: 12,
-  //                       child: Column(
-  //                         crossAxisAlignment: CrossAxisAlignment.start,
-  //                         children: <Widget>[
-  //                           Text(
-  //                             '${hotel.name}',
-  //                             style: TextStyle(
-  //                               color: Colors.white,
-  //                               fontSize: 20,
-  //                               fontWeight: FontWeight.bold,
-  //                               shadows: <Shadow>[
-  //                                 Shadow(
-  //                                   offset: Offset(1.0, 1.0),
-  //                                   blurRadius: 3.0,
-  //                                   color: Color.fromARGB(255, 0, 0, 0),
-  //                                 ),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                           Row(
-  //                             children: [
-  //                               Icon(
-  //                                 Symbols.location_on,
-  //                                 color: Colors.white,
-  //                                 weight: 700,
-  //                               ),
-  //                               SizedBox(
-  //                                 width: 5,
-  //                               ),
-  //                               Text(
-  //                                 '${hotel.city}',
-  //                                 style: TextStyle(
-  //                                   color: Colors.white,
-  //                                   fontSize: 16,
-  //                                   fontWeight: FontWeight.bold,
-  //                                   shadows: <Shadow>[
-  //                                     Shadow(
-  //                                       offset: Offset(1.0, 1.0),
-  //                                       blurRadius: 3.0,
-  //                                       color: Color.fromARGB(255, 0, 0, 0),
-  //                                     ),
-  //                                   ],
-  //                                 ),
-  //                               ),
-  //                             ],
-  //                           ),
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               );
-  //             },
-  //           ),
-  //         );
-  //       } else if (snapshot.hasError) {
-  //         return Text('Error: ${snapshot.error}');
-  //       } else {
-  //         return Text("NoData");
-  //       }
-  //     },
-  //   );
-  // }
 
   Widget _buildNearest() {
     print("buildNearest working....");
@@ -582,87 +516,104 @@ class _Home extends State<Home> {
           return SizedBox(
             height: 400,
             child: ListView.builder(
-              itemCount: snapshot.data!.length,
+              itemCount: snapshot.data!.length < 3 ? snapshot.data!.length : 3,
               itemBuilder: (context, index) {
                 HotelAllModel hotel = snapshot.data![index];
                 return Card(
-                    child: Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        bottomLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                        bottomRight: Radius.circular(15),
-                      ),
-                      child: Image.network(
-                        '${hotel.img}',
-                        width: 150,
-                        height: 130,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    child: GestureDetector(
+                        onTap: () async {
+                          // final SharedPreferences prefs =
+                          //     await SharedPreferences.getInstance();
+                          // await prefs.setString('checkindate',
+                          //     rangeDateTime!.start.toString().substring(0, 10));
+                          // await prefs.setString('checkoutdate',
+                          //     rangeDateTime!.end.toString().substring(0, 10));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HotelDetail(
+                                      hotelId: hotel.hotelId,
+                                    )),
+                          );
+                        },
+                        child: Row(
                           children: [
-                            Text(
-                              hotel.name,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                bottomLeft: Radius.circular(15),
+                                topRight: Radius.circular(15),
+                                bottomRight: Radius.circular(15),
+                              ),
+                              child: Image.network(
+                                '${hotel.img}',
+                                width: 150,
+                                height: 130,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                            Row(
-                              children: [
-                                Icon(
-                                  Symbols.location_on,
-                                  color: Colors.grey,
+                            Container(
+                                child: Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      hotel.name,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Symbols.location_on,
+                                          color: Colors.grey,
+                                        ),
+                                        Text(
+                                          '${hotel.displacement!.toString()} km.',
+                                          // hotel.city,
+                                          maxLines: 1,
+                                        ),
+                                        const Spacer(),
+                                        Icon(
+                                          Symbols.star,
+                                          color: Colors.yellow,
+                                          fill: 1,
+                                        ),
+                                        Text(hotel.ratings.toString())
+                                        // Text("5")
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '\$${hotel.min_price}',
+                                          // '\$80',
+                                          style: TextStyle(
+                                              color: Colors.deepPurple,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                        Text(
+                                          '/night',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  '${hotel.displacement!.toString()} km.',
-                                  // hotel.city,
-                                  maxLines: 1,
-                                ),
-                                const Spacer(),
-                                Icon(
-                                  Symbols.star,
-                                  color: Colors.yellow,
-                                  fill: 1,
-                                ),
-                                Text(hotel.ratings.toString())
-                                // Text("5")
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  '\$${hotel.min_price}',
-                                  // '\$80',
-                                  style: TextStyle(
-                                      color: Colors.deepPurple,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                                Text(
-                                  '/night',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ))
                           ],
-                        ),
-                      ),
-                    )
-                  ],
-                ));
+                        )));
               },
             ),
           );
         } else {
           return const Center(child: Text('No hotels available'));
         }
-        // แสดงตัวโหลดขณะรอข้อมูล
       },
     );
   }

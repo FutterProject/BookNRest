@@ -1,5 +1,8 @@
+import 'package:book_and_rest/userPreferences.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:geocoding/geocoding.dart';
 
 class destination extends StatefulWidget {
   const destination({super.key});
@@ -99,11 +102,18 @@ class _destination extends State<destination> {
   }
 
   List<String> _filterProvince = [];
+  String? userLatLng;
   @override
   void initState() {
     _filterProvince = thaiProvinces;
     super.initState();
     _runFilter('');
+    initializeUserLocation();
+  }
+
+  Future<void> initializeUserLocation() async {
+    userLatLng = await UserPreferences.getLatLng();
+    setState(() {});
   }
 
   void _runFilter(String enteredKeyword) {
@@ -145,15 +155,30 @@ class _destination extends State<destination> {
                 child: ListView.builder(
                   itemCount: _filterProvince.length,
                   itemBuilder: (context, index) {
-                    final province = _filterProvince[index];
+                    var province = _filterProvince[index];
                     print('****** : $province');
                     return ListTile(
                       title: Text(province),
                       leading: province != 'Near my location'
                           ? Icon(Icons.location_city)
                           : Icon(Symbols.gps_fixed),
-                      onTap: () {
+                      onTap: () async {
                         //เลือกจังหวัดที่ต้องการส่งค่ากลับไป
+                        if (province == "Near my location") {
+                          if (userLatLng != null) {
+                            List<String> latLng = userLatLng!.split(',');
+                            double Lat = double.parse(latLng[0]);
+                            double Lng = double.parse(latLng[1]);
+                            // ใช้ค่า Lat และ Lng ต่อไป
+                            List<Placemark> placemarks =
+                                await placemarkFromCoordinates(Lat, Lng);
+                            Placemark placeMark = placemarks[0];
+                            province = placeMark.administrativeArea!;
+                            if (province == "Krung Thep Maha Nakhon") {
+                              province = "bangkok";
+                            }
+                          }
+                        }
                         Navigator.pop(context, province);
                         print('======$province=======');
                       },
