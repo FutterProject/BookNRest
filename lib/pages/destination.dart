@@ -174,6 +174,9 @@ class _destination extends State<destination> {
                                 await placemarkFromCoordinates(Lat, Lng);
                             Placemark placeMark = placemarks[0];
                             province = placeMark.administrativeArea!;
+                            if (province == "Krung Thep Maha Nakhon") {
+                              province = "bangkok";
+                            }
                           }
                         }
                         Navigator.pop(context, province);

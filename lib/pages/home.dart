@@ -290,18 +290,11 @@ class _Home extends State<Home> {
         setState(() {
           myLat = locationData.latitude!;
           myLong = locationData.longitude!;
-          hotelLat = 13.118685137188292;
-          hotelLong = 100.92146253209525;
           setUsetLocation();
-          // hotelLat = double.parse(userModel.lat);
-          // hotelLong = double.parse(userModel!.long);
-
-          print(
-              'myLat : $myLat | myLong : $myLong ==== hotelLat : $hotelLat | hotelLong : $hotelLong');
-          distance = calculateDistance(myLat!, myLong!, hotelLat!, hotelLong!);
-          var myFormat = NumberFormat('#0.0#', 'en_US');
-          distanceString = myFormat.format(distance);
-          print('Distance from me to hotel : $distance => $distanceString');
+          // distance = calculateDistance(myLat!, myLong!, hotelLat!, hotelLong!);
+          // var myFormat = NumberFormat('#0.0#', 'en_US');
+          // distanceString = myFormat.format(distance);
+          // print('Distance from me to hotel : $distance => $distanceString');
         });
       }
     } else {
